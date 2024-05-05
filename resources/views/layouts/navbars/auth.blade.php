@@ -1,12 +1,12 @@
 <div class="sidebar" data-color="white" data-active-color="danger">
     <div class="logo">
-        <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+        <a href="#" class="simple-text logo-mini">
             <div class="logo-image-small">
-                <img src="{{ asset('paper') }}/img/logo-small.png">
+                <img src="{{ asset('paper') }}/img/laravel.svg">
             </div>
         </a>
-        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-            {{ __('Creative Tim') }}
+        <a href="#" class="simple-text logo-normal">
+            {{ __('Food Clustering') }}
         </a>
     </div>
     <div class="sidebar-wrapper">
@@ -42,7 +42,7 @@
                     </ul>
                 </div>
             </li>
-            <li class="{{ $elementActive == 'icons' ? 'active' : '' }}">
+            <!-- <li class="{{ $elementActive == 'icons' ? 'active' : '' }}">
                 <a href="{{ route('page.index', 'icons') }}">
                     <i class="nc-icon nc-diamond"></i>
                     <p>{{ __('Icons') }}</p>
@@ -77,7 +77,7 @@
                     <i class="nc-icon nc-spaceship text-white"></i>
                     <p class="text-white">{{ __('Upgrade to PRO') }}</p>
                 </a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </div>

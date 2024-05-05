@@ -7,4 +7,5 @@
         @yield('content')
         @include('layouts.footer')
     </div>
+    
 </div>

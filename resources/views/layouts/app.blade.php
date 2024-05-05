@@ -29,12 +29,7 @@
     
     @auth()
         @include('layouts.page_templates.auth')
-        @include('layouts.navbars.fixed-plugin')
     @endauth
-    
-    @guest
-        @include('layouts.page_templates.guest')
-    @endguest
 
     <!--   Core JS Files   -->
     <script src="{{ asset('paper') }}/js/core/jquery.min.js"></script>
@@ -56,7 +51,6 @@
     
     @stack('scripts')
 
-    @include('layouts.navbars.fixed-plugin-js')
 </body>
 
 </html>

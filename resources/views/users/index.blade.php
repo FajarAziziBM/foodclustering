@@ -1,21 +1,3 @@
-<!--
-=========================================================
- Paper Dashboard - v2.0.0
-=========================================================
-
- Product Page: https://www.creative-tim.com/product/paper-dashboard
- Copyright 2019 Creative Tim (https://www.creative-tim.com)
- UPDIVISION (https://updivision.com)
- Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard/blob/master/LICENSE)
-
- Coded by Creative Tim
-
-=========================================================
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -115,7 +97,6 @@ The above copyright notice and this permission notice shall be included in all c
     </noscript>
 </head>
 
-
 <body>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6"
@@ -168,7 +149,7 @@ The above copyright notice and this permission notice shall be included in all c
                                     </ul>
                                 </div>
                             </li>
-                            <li >
+                            <!-- <li >
                                 <a href="{{ route('page.index', 'icons') }}">
                                     <i class="nc-icon nc-diamond"></i>
                                     <p>{{ __('Icons') }}</p>
@@ -203,7 +184,7 @@ The above copyright notice and this permission notice shall be included in all c
                                     <i class="nc-icon nc-spaceship text-white"></i>
                                     <p class="text-white">{{ __('Upgrade to PRO') }}</p>
                                 </a>
-                            </li> --}}
+                            </li> --}} -->
                         </ul>
                     </div>
                 </div>
@@ -440,7 +421,6 @@ The above copyright notice and this permission notice shall be included in all c
     
     @stack('scripts')
 
-    @include('layouts.navbars.fixed-plugin-js')
 </body>
 
 </html>
