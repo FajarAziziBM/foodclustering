@@ -10,7 +10,7 @@
     <!-- Extra details for Live View on GitHub Pages -->
     
     <title>
-        {{ ('Food Clustering') }}
+        {{ __('Food Clustering') }}
     </title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
         name='viewport' />
@@ -38,6 +38,7 @@
     <script src="{{ asset('paper') }}/js/plugins/perfect-scrollbar.jquery.min.js"></script>
     <!--  Google Maps Plugin    -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFPQibxeDaLIUHsC6_KqDdFaUdhrbhZ3M"></script>
     <!-- Chart JS -->
     <script src="{{ asset('paper') }}/js/plugins/chartjs.min.js"></script>
     <!--  Notifications Plugin    -->
@@ -50,7 +51,6 @@
     <script src="../assets/demo/jquery.sharrre.js"></script>
     
     @stack('scripts')
-
 </body>
 
 </html>

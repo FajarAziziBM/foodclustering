@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('clusterings', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->decimal('hluaspanen');
+            $table->decimal('hproduktivitas');
+            $table->decimal('hproduksi');
+            $table->smallInteger('htahun');
         });
     }
 

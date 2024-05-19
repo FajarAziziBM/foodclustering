@@ -185,6 +185,8 @@ return [
         /*
          * Package Service Providers...
          */
+        
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -212,4 +214,5 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'Excel' => maatwebsite\Excel\Facades\Excel::class,
 ];
