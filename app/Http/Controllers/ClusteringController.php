@@ -13,6 +13,7 @@ class ClusteringController extends Controller
     public function index()
     {
         //
+        
     }
 
     /**
@@ -37,6 +38,7 @@ class ClusteringController extends Controller
     public function show(Clustering $clustering)
     {
         //
+        return view('pages.hasilklaster');
     }
 
     /**
@@ -45,6 +47,7 @@ class ClusteringController extends Controller
     public function edit(Clustering $clustering)
     {
         //
+        return view('pages.klasteringdata');
     }
 
     /**

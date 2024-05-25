@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('clusterings', function (Blueprint $table) {
             $table->id();
-            $table->decimal('hluaspanen');
-            $table->decimal('hproduktivitas');
-            $table->decimal('hproduksi');
-            $table->smallInteger('htahun');
+            $table->foreignId('provinsiId')->constrained('provinces')->onUpdate('cascade')->onDelete('restrict');
+            $table->double('eps');
+            $table->double('minpts');
+            $table->tinyInteger('jmlcluster');
+            $table->tinyInteger('jmlnoice');
+            $table->double('jmlhtercluster');
+            $table->double('silhouetteindek');
+            $table->string('detail');
+
         });
     }
 

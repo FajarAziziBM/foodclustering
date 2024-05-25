@@ -17,26 +17,32 @@
                     <p>{{ __('Dashboard') }}</p>
                 </a>
             </li>
-            <li class="{{ $elementActive == 'user' || $elementActive == 'profile' || $elementActive == 'inputdata' ? 'active' : '' }}">
+            <li class="{{ $elementActive == 'inputdata' || $elementActive == 'klasteringdata' || $elementActive == 'hasilklaster' ? 'active' : '' }}">
                 <a data-toggle="collapse" aria-expanded="true" href="#laravelExamples">
                     <i class="nc-icon nc-chart-pie-36"></i>
                     <p>
-                            {{ __('Clustering Food') }}
+                            {{ __('Food Clustering') }}
                         <b class="caret"></b>
                     </p>
                 </a>
                 <div class="collapse show" id="laravelExamples">
                     <ul class="nav">
-                        <li class="{{ $elementActive == 'profile' ? 'active' : '' }}">
-                            <a href="{{ route('profile.edit') }}">
+                        <li class="{{ $elementActive == 'inputdata' ? 'active' : '' }}">
+                            <a href="{{ route('page.index', 'inputdata') }}">
                                 <i class="sidebar-mini-icon nc-icon nc-tile-56"></i>
                                 <span class="sidebar-normal">{{ __(' Input Data ') }}</span>
                             </a>
                         </li>
-                        <li class="{{ $elementActive == 'inputdata' ? 'active' : '' }}">
-                            <a href="{{ route('page.index', 'inputdata') }}">
+                        <li class="{{ $elementActive == 'klasteringdata' ? 'active' : '' }}">
+                            <a href="{{ route('page.index', 'klasteringdata') }}">
                                 <i class="sidebar-mini-icon nc-icon nc-tile-56"></i>
-                                <span class="sidebar-normal">{{ __(' Hasil Kluster ') }}</span>
+                                <span class="sidebar-normal">{{ __(' Klastering Data ') }}</span>
+                            </a>
+                        </li>
+                        <li class="{{ $elementActive == 'hasilklaster' ? 'active' : '' }}">
+                            <a href="{{ route('page.index', 'hasilklaster') }}">
+                                <i class="sidebar-mini-icon nc-icon nc-tile-56"></i>
+                                <span class="sidebar-normal">{{ __(' Hasil Klaster ') }}</span>
                             </a>
                         </li>
                     </ul>
