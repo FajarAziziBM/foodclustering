@@ -17,7 +17,7 @@ return new class extends Migration
             $table->double('luaspanen');
             $table->double('produktivitas');
             $table->double('produksi');
-            // $table->tinyInteger('tahun');
+            $table->integer('tahun');
             // $table->double('longitude');
             // $table->double('latitude');
             $table->timestamps();

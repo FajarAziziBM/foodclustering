@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'class' => 'login-page',
-    'elementActive' => ''
+    'class' => 'Landing Page',
+    'elementActive' => 'landing-page'
 ])
 
 @section('content')
@@ -9,12 +9,8 @@
             <div class="container col-md-10">
                 <div class="header-body text-center mb-7">
                     <div class="row justify-content-center">
-                        <div class="col-lg-8 col-md-12 pt-5">
-                            <h1 class="@if(Auth::guest()) text-white @endif">{{ __('Welcome to Paper Dashboard Laravel Live Preview.') }}</h1>
-
-                            <p class="@if(Auth::guest()) text-white @endif text-lead mt-3 mb-0">
-                                {{ __('Log in and see how you can save more than 90 hours of work with CRUDs for managing: #users, #roles, #items, #categories, #tags and more.') }}
-                            </p>
+                        <div class="col-lg-6 col-md-8 pt-5">
+                            <h1 >{{ __('Welcome to Food Clustering with DBSCAN Method.') }}</h1>
                         </div>
                     </div>
                 </div>
@@ -23,10 +19,3 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            demo.checkFullPageBackgroundImage();
-        });
-    </script>
-@endpush

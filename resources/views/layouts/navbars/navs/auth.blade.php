@@ -8,7 +8,7 @@
                     <span class="navbar-toggler-bar bar3"></span>
                 </button>
             </div>
-            <a class="navbar-brand" href="#">{{ __('Food Clustering') }}</a>
+            <a class="navbar-brand" href="#">{{ __($class ) }}</a>
         </div>
     </div>
 </nav>

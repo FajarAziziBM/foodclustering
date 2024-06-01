@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'class' => '',
+'class' => 'Hasil Klaster',
 'elementActive' => 'hasilklaster'
 ])
 
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     @endsection
 

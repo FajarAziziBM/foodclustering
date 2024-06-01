@@ -1,13 +1,13 @@
 @extends('layouts.app', [
-    'class' => '',
+    'class' => 'Klastering Data',
     'elementActive' => 'klasteringdata'
 ])
 
 @section('content')
     <div class="content">
-        
+
         <div class="row">
-            
+
             <div class="col-md-12">
                 <div class="card ">
 
@@ -21,37 +21,17 @@
                         <hr>
                     </div>
 
-                    
-
                     <div class="card-body ">
                     <div class="table-responsive">
-                        <table class="table"> 
-                                    <thead class=" text-primary"> 
-                                        <tr>
-                                            <th> Tahun </th> 
-                                            <th class="text-right"> Action </th> 
-                                        </tr>
-                                    </thead> 
-                                    <tbody> 
-                                        <tr> 
-                                            <td> 2018 </td> 
-                                            <td class="text-right"> 
-                                                <a class="btn btn-primary btn-sm" target="_blank" href="#">
-                                                    <i class="fa-thin fa-circle-nodes"></i>
-                                                </a> 
-                                            </td> 
-                                        </tr> 
-                                        <tr> 
-                                            <td> 2019 </td> 
-                                            <td class="text-right">
-                                                <a class="btn btn-primary btn-sm" target="_blank" href="#">
-                                                    <i class="fa-thin fa-circle-nodes"></i>
-                                                </a> 
-                                            </td> 
-                                        </tr>
-                                </table> 
-                        </div>
-
+                        <table class="table" id="klateringData">
+                            <thead class="text-primary">
+                                <tr>
+                                    <th> Tahun </th>
+                                    <th class="text-right"> Action </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                         <hr>
                     </div>
             </div>
@@ -186,3 +166,24 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            var table = $('#klateringData').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: false,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('klasteringdata') }}",
+                    type: 'GET'
+                },
+                columns: [
+                    { data: 'tahun', name: 'tahun' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ],
+                });
+            });
+    </script>
+@endpush

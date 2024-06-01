@@ -9,23 +9,39 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class UsersImport implements ToModel, WithHeadingRow
-{
+class UsersImport implements ToModel, WithHeadingRow{
+
     /**
      * @param array $row
      *
      * @return User|null
      */
 
+    private $year;
+
+    public function __construct($year)
+    {
+        $this->year = $year;
+    }
     public function model(array $row)
     {
-        // dd($row);
+        $rows = [
+            'namaprovinsi' => $row['provinsi'],
+            'luaspanen' => $row['luas_panen_tanaman_padi_ha_ha'],
+            'produktivitas' => $row['produktivitas_tanaman_padi_kuha_kuha'],
+            'produksi' => $row['rekap_produksi_padi_ton_ton'],
+            'tahun' => $this->year,
+        ];
 
         return new Province([
-           'namaprovinsi'     => $row['provinsi'],
-           'luaspanen'    => $row['luas_panen_tanaman_padi_ha_ha'],
-           'produktivitas' => $row['produktivitas_tanaman_padi_kuha_kuha'],
-           'produksi' => $row['rekap_produksi_padi_ton_ton'],
+            'namaprovinsi' => $rows['namaprovinsi'],
+            'luaspanen' => $rows['luaspanen'],
+            'produktivitas' => $rows['produktivitas'],
+            'produksi' => $rows['produksi'],
+            'tahun' => $rows['tahun'],
         ]);
     }
+
 }
+
+

@@ -26,10 +26,17 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
+Route::resource('/inputdata', ProvinceController::class);
 Route::get('/inputdata', [\App\Http\Controllers\ProvinceController::class, 'index'])->name('inputdata');
 Route::post('/inputdata', [\App\Http\Controllers\ProvinceController::class, 'importdatas'])->name('importdatas');
+Route::delete('/inputdata/{province}', [App\Http\Controllers\ProvinceController::class, 'destroy'])->name('delete.province');
+Route::post('/inputdata/{province}', [App\Http\Controllers\ProvinceController::class, 'edit'])->name('edit.province');
+
+
+
 
 Route::get('/hasilklaster', [\App\Http\Controllers\ClusteringController::class, 'show'])->name('hasilklaster');
+Route::get('/klasteringdata', [\App\Http\Controllers\ClusteringController::class, 'index'])->name('klasteringdata');
 
-Route::get('/klasteringdata', [\App\Http\Controllers\ClusteringController::class, 'edit'])->name('klasteringdata');
+
 Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);

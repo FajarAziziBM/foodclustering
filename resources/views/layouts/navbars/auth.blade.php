@@ -2,11 +2,11 @@
     <div class="logo">
         <a href="#" class="simple-text logo-mini">
             <div class="logo-image-small">
-                <img src="{{ asset('paper') }}/img/laravel.svg">
+                <img src="{{ asset('paper') }}/img/LogoPNLNew.png">
             </div>
         </a>
-        <a href="#" class="simple-text logo-normal">
-            {{ __('BOMAN') }}
+        <a href="/" class="simple-text logo-normal">
+            {{ __('Food Clustering') }}
         </a>
     </div>
     <div class="sidebar-wrapper">
