@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Province extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = ['id'];
+    protected $fillable = ['namaprovinsi', 'luaspanen', 'produktivitas', 'produksi', 'tahun'];
 
     public function Clustering()
     {

@@ -19,7 +19,7 @@ class ProvinceController extends Controller
             $provinces = Province::all();
             return DataTables::of($provinces)
             ->addColumn('action', function ($row) {
-                $editBtn = '<a href="' . route('edit.province', $row->id) . '" class="btn btn-warning btn-sm" target="_blank"><i class="fas fa-pen-to-square"></i></a>';
+                $editBtn = '<a href="' . route('edit.province', $row->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen-to-square"></i></a>';
                 $deleteBtn = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' . $row->id . ')"><i class="fas fa-trash-can"></i></button>';
                 $btn = '<td class="text-right">' . $editBtn . ' ' . $deleteBtn . '</td>';
                 return $btn;
@@ -91,18 +91,43 @@ class ProvinceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id, Request $request, Province $province)
+    public function edit(Request $request, Province $province, $id)
     {
-        $province->update($id->all());
-        return redirect()->route('inputdata')->with('success', 'Data updated successfully');
+        $province = Province::findOrFail($id);
+        return view('pages.editdata', compact('province'));
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Province $province)
+    public function update($id, Request $request, Province $province)
     {
-        //
+        // Validasi data yang diterima
+        $validatedData = $request->validate([
+            'namaprovinsi' => 'required|string|max:255',
+            'luaspanen' => 'required|numeric',
+            'produktivitas' => 'required|numeric',
+            'produksi' => 'required|numeric',
+            'tahun' => 'required|integer',
+        ]);
+
+        // Ambil data berdasarkan ID dari request
+        $province = Province::findOrFail($id);
+
+        // Perbarui data dengan nilai baru dari request
+        $province->namaprovinsi = $validatedData['namaprovinsi'];
+        $province->luaspanen = $validatedData['luaspanen'];
+        $province->produktivitas = $validatedData['produktivitas'];
+        $province->produksi = $validatedData['produksi'];
+        $province->tahun = $validatedData['tahun'];
+
+        // Simpan perubahan ke database
+        $province->save();
+
+        // Return a JSON response
+        return response()->json(['success' => 'Data updated successfully']);
+
     }
 
     /**

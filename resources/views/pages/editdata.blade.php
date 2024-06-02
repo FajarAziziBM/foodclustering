@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-    'class' => 'Input Data',
+    'class' => 'Edit Data',
     'elementActive' => 'inputdata'
 ])
 
@@ -7,39 +7,75 @@
     <div class="content">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Edit Province Data</h4>
+                <div class="card ">
+                    <div class="card-header ">
+                        <div class="row align-items-center">
+                        <hr>
                     </div>
-                    <div class="card-body">
-                        <form action="{{ route('edit.province', $province->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <div class="form-group">
-                                <label for="namaprovinsi">Province Name</label>
-                                <input type="text" class="form-control" id="namaprovinsi" name="namaprovinsi" value="{{ $province->namaprovinsi }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="luaspanen">Luas Panen (ha)</label>
-                                <input type="number" class="form-control" id="luaspanen" name="luaspanen" value="{{ $province->luaspanen }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="produktivitas">Produktivitas (ku/ha)</label>
-                                <input type="number" class="form-control" id="produktivitas" name="produktivitas" value="{{ $province->produktivitas }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="produksi">Produksi (ton)</label>
-                                <input type="number" class="form-control" id="produksi" name="produksi" value="{{ $province->produksi }}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="tahun">Tahun</label>
-                                <input type="number" class="form-control" id="tahun" name="tahun" value="{{ $province->tahun }}" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </form>
+
+                    <div class="card-body ">
+                        <div class="container">
+                            <form id="editForm" action="{{ route('update.province', ['id' => $province->id]) }}" method="POST">
+                                @csrf
+                                @method('PUT') <!-- Use PUT method for updating data -->
+
+                                <div class="form-group">
+                                    <label for="namaprovinsi">Nama Provinsi</label>
+                                    <input type="text" name="namaprovinsi" id="namaprovinsi" class="form-control" value="{{ $province->namaprovinsi }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="luaspanen">Luas Panen</label>
+                                    <input type="number" name="luaspanen" id="luaspanen" class="form-control" value="{{ $province->luaspanen }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="produktivitas">Produktivitas</label>
+                                    <input type="number" name="produktivitas" id="produktivitas" class="form-control" value="{{ $province->produktivitas }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="produksi">Produksi</label>
+                                    <input type="number" name="produksi" id="produksi" class="form-control" value="{{ $province->produksi }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tahun">Tahun</label>
+                                    <input type="number" name="tahun" id="tahun" class="form-control" value="{{ $province->tahun }}" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            var provinceId = "{{ $province->id }}"; // Get the province ID
+
+            $('#editForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+
+                var formData = $(this).serialize(); // Serialize form data
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('update.province', ['id' => ':id']) }}".replace(':id', provinceId),
+                    data: formData,
+                    success: function(data) {
+                        console.log('Data updated successfully');
+                        window.location.href = "/inputdata";
+                    },
+                    error: function(data) {
+                        console.error('Error updating data');
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
