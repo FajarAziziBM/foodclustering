@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\ProvincesController;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Row;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClusteringController;
+use App\Models\Clustering;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,23 +23,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
-Route::resource('/inputdata', ProvinceController::class);
 Route::get('/inputdata', [\App\Http\Controllers\ProvinceController::class, 'index'])->name('inputdata');
 Route::post('/inputdata', [\App\Http\Controllers\ProvinceController::class, 'importdatas'])->name('importdatas');
 Route::delete('/inputdata/{province}', [App\Http\Controllers\ProvinceController::class, 'destroy'])->name('delete.province');
-
 Route::get('/province/{id}/edit', [App\Http\Controllers\ProvinceController::class, 'edit'])->name('edit.province');
-
 Route::put('/province/{id}/edit', [App\Http\Controllers\ProvinceController::class, 'update'])->name('update.province');
 
+Route::get('/klasteringdata', [ClusteringController::class, 'index'])->name('klasteringdata');
+Route::get('/sendDatas', [ProvincesController::class, 'index'])->name('sendDatas');
+
+Route::get('/klasteringdata/{id}/dbscan', [\App\Http\Controllers\ClusteringController::class, 'create'])->name('hasilklaster');
+Route::put('/klasteringdata/{id}/dbscan', [\App\Http\Controllers\ClusteringController::class, 'index'])->name('klasteringdata2');
+Route::delete('/klasteringdata/{id}', [App\Http\Controllers\ClusteringController::class, 'destroy'])->name('delete.cluster');
 
 
-Route::get('/hasilklaster', [\App\Http\Controllers\ClusteringController::class, 'show'])->name('hasilklaster');
-Route::get('/klasteringdata', [\App\Http\Controllers\ClusteringController::class, 'index'])->name('klasteringdata');
 
+
+Route::get('/hasilklasterdbscan', [\App\Http\Controllers\ClusteringController::class, 'show'])->name('hasilklasterdbscan');
 
 Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);

@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "api" middleware group. Make something great!
 |
+
 */
+Route::get('/datas', [ProvincesController::class, 'index'])->name('postapidatas');
 
-
-
-Route::get('/get-datas', [ProvincesController::class, 'index'])->name('apidatas');
+Route::post('/save-data', [ProvincesController::class, 'hasilcluster'])->name('saveData');

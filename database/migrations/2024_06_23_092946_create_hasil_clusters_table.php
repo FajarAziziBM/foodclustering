@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('provinces', function (Blueprint $table) {
+        Schema::create('hasil_clusters', function (Blueprint $table) {
             $table->id();
-            $table->string('namaprovinsi', 35);
-            $table->float('luaspanen', 10);
-            $table->float('produktivitas', 10);
-            $table->float('produksi', 10);
-            $table->integer('tahun');
+            $table->foreignId('clusterId')->constrained('clusterings')->onUpdate('cascade')->onDelete('restrict');
+            $table->string('cluster', 15);
+            $table->text('anggota_cluster');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('provinces');
+        Schema::dropIfExists('hasil_clusters');
     }
 };

@@ -6,6 +6,7 @@
 @section('content')
     <div class="content">
         <div class="row">
+
             <div class="col-md-12">
                 <div class="card ">
                     <div class="card-header ">
@@ -44,6 +45,7 @@
                         <hr>
                     </div>
             </div>
+
         </div>
     </div>
 @endsection
@@ -52,28 +54,25 @@
     <script>
         $(document).ready(function() {
             var table = $('#inputdatas').DataTable({
-                processing: true,
-                serverSide: true,
-                paging: false,
-                scrollCollapse: true,
-                ajax: {
-                    url: "{{ route('inputdata') }}",
-                    type: 'GET'
-                },
-                columns: [
-                    { data: 'namaprovinsi', name: 'provinsi' },
-                    { data: 'luaspanen', name: 'luas_panen' },
-                    { data: 'produktivitas', name: 'produktivitas' },
-                    { data: 'produksi', name: 'produksi' },
-                    { data: 'tahun', name: 'tahun' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
-                ],
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    scrollCollapse: true,
+                    ajax: "{{ route('inputdata') }}",
+                    columns: [
+                        { data: 'namaprovinsi', name: 'namaprovinsi' },
+                        { data: 'luaspanen', name: 'luaspanen' },
+                        { data: 'produktivitas', name: 'produktivitas' },
+                        { data: 'produksi', name: 'produksi' },
+                        { data: 'tahun', name: 'tahun' },
+                        { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-right' }
+                    ]
                 });
             });
 
 
             function deleteData(id) {
-            if (confirm("Are you sure you want to delete this data?")) {
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
                 $.ajax({
                     type: "POST", // Menggunakan metode POST
                     url: "{{ route('delete.province', ['province' => ':id']) }}".replace(':id', id),
@@ -82,12 +81,12 @@
                         "_method": "DELETE" // Menyertakan _method dengan nilai DELETE
                     },
                     success: function (data) {
-                        console.log('Data deleted successfully');
+                        console.log('Data berhasil dihapus');
                         // Refresh the DataTable after deleting the row
                         $('#inputdatas').DataTable().ajax.reload();
                     },
                     error: function (data) {
-                        console.error('Error deleting data');
+                        console.error('Gagal menghapus data');
                     }
                 });
             }

@@ -17,4 +17,9 @@ class Province extends Model
         return $this->hasMany(Clustering::class, 'id');
     }
 
+    public function HasilClustering()
+    {
+        return $this->hasMany(HasilCluster::class, 'id');
+    }
+
 }

@@ -5,164 +5,35 @@
 
 @section('content')
     <div class="content">
-
         <div class="row">
 
             <div class="col-md-12">
                 <div class="card ">
-
                     <div class="card-header ">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <br>
                                 <h3 class="mb-0">Klastering Data</h3>
                             </div>
-                        </div>
                         <hr>
                     </div>
 
                     <div class="card-body ">
-                    <div class="table-responsive">
-                        <table class="table" id="klateringData">
-                            <thead class="text-primary">
-                                <tr>
-                                    <th> Tahun </th>
-                                    <th class="text-right"> Action </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                        <div class="table-responsive">
+                            <table class="table" id="dataTable">
+                                <thead class=" text-primary">
+                                    <tr>
+                                        <th>Tahun</th>
+                                        <th class="text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                         <hr>
                     </div>
             </div>
 
         </div>
-
-        <div class="col-md-12">
-            <div class="card ">
-                <div class="card-header ">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <br>
-                            <h3 class="mb-0">Analisis kNNdist</h3>
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-
-                <div class="card-body ">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead class=" text-primary">
-                                <tr>
-                                    <th> Eps </th>
-                                    <th> minPts </th>
-                                    <th> Jumlah cluster </th>
-                                    <th> Jumlah Noise </th>
-                                    <th class="text-right"> Jumlah Tercluster </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td> 350 </td>
-                                    <td> 3 </td>
-                                    <td> 2 </td>
-                                    <td> 0 </td>
-                                    <td class="text-right"> 180 </td>
-                                </tr>
-                                <tr>
-                                    <td> 400 </td>
-                                    <td> 3 </td>
-                                    <td> 2 </td>
-                                    <td> 0 </td>
-                                    <td class="text-right"> 180 </td>
-                                </tr>
-                        </table>
-                    </div>
-                    <hr>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <div class="card ">
-                <div class="card-header ">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <br>
-                            <h3 class="mb-0">Analisis Silhouette Indek</h3>
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-
-                <div class="card-body ">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead class=" text-primary">
-                                <tr>
-                                    <th> Eps </th>
-                                    <th> minPts </th>
-                                    <th class="text-right"> Silhouette Indek </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td> 350 </td>
-                                    <td> 3 </td>
-                                    <td class="text-right"> 0,5 </td>
-                                </tr>
-                                <tr>
-                                    <td> 400 </td>
-                                    <td> 3 </td>
-                                    <td class="text-right"> 0,7 </td>
-                                </tr>
-                        </table>
-                    </div>
-                    <hr>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <div class="card ">
-                <div class="card-header ">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <br>
-                            <h3 class="mb-0">Hasil Klaster Terbaik</h3>
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-
-                <div class="card-body ">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead class=" text-primary">
-                                <tr>
-                                    <th> Eps </th>
-                                    <th> minPts </th>
-                                    <th> Jumlah cluster </th>
-                                    <th> Jumlah Noise </th>
-                                    <th class="text-right"> Jumlah Tercluster </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td> 350 </td>
-                                    <td> 3 </td>
-                                    <td> 2 </td>
-                                    <td> 0 </td>
-                                    <td class="text-right"> 180 </td>
-                                </tr>
-                        </table>
-                    </div>
-                    <hr>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 @endsection
@@ -170,7 +41,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            var table = $('#klateringData').DataTable({
+            var table = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
                 paging: false,
@@ -183,7 +54,33 @@
                     { data: 'tahun', name: 'tahun' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
+            });
+
+            $(document).on('click', '.btn-cluster', function(e) {
+                e.preventDefault();
+                var tahun = $(this).closest('tr').find('td:eq(0)').text();
+                $.ajax({
+                    url: "{{ route('sendDatas') }}", // Endpoint untuk clustering
+                    type: 'GET',
+                    data: {
+                        tahun: tahun
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Data berhasil diklastering untuk tahun ' + tahun);
+                            // Handle success, e.g., update UI or reload data
+                        } else {
+                            alert('Gagal melakukan klastering untuk tahun ' + tahun + ': ' + response.message);
+                            // Handle failure scenario
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat melakukan klastering untuk tahun ' + tahun);
+                        // Handle error scenario
+                    }
                 });
             });
+        });
     </script>
 @endpush

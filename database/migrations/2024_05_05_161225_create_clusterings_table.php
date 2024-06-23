@@ -14,14 +14,13 @@ return new class extends Migration
         Schema::create('clusterings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('provinsiId')->constrained('provinces')->onUpdate('cascade')->onDelete('restrict');
-            $table->double('eps');
-            $table->double('minpts');
-            $table->tinyInteger('jmlcluster');
-            $table->tinyInteger('jmlnoice');
-            $table->double('jmlhtercluster');
-            $table->double('silhouetteindek');
-            $table->string('detail');
-
+            $table->double('eps', 15);
+            $table->double('minpts', 15);
+            $table->integer('jmlcluster');
+            $table->integer('jmlnoice');
+            $table->integer('jmltercluster');
+            $table->double('silhouette_index', 15);
+            $table->timestamps();
         });
     }
 
@@ -32,4 +31,16 @@ return new class extends Migration
     {
         Schema::dropIfExists('clusterings');
     }
+
+    // database/migrations/xxxx_xx_xx_create_province_labels_table.php
+    // public function up()
+    // {
+    //     Schema::create('province_labels', function (Blueprint $table) {
+    //         $table->id();
+    //         $table->string('province');
+    //         $table->integer('label');
+    //         $table->timestamps();
+    //     });
+    // }
+
 };

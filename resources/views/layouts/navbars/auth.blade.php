@@ -39,8 +39,8 @@
                                 <span class="sidebar-normal">{{ __(' Klastering Data ') }}</span>
                             </a>
                         </li>
-                        <li class="{{ $elementActive == 'hasilklaster' ? 'active' : '' }}">
-                            <a href="{{ route('page.index', 'hasilklaster') }}">
+                        <li class="{{ $elementActive == 'hasilklasterdbscan' ? 'active' : '' }}">
+                            <a href="{{ route('page.index', 'hasilklasterdbscan') }}">
                                 <i class="sidebar-mini-icon nc-icon nc-tile-56"></i>
                                 <span class="sidebar-normal">{{ __(' Hasil Klaster ') }}</span>
                             </a>
