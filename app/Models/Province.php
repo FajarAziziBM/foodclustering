@@ -14,12 +14,12 @@ class Province extends Model
 
     public function Clustering()
     {
-        return $this->hasMany(Clustering::class, 'id');
+        return $this->hasMany(Clustering::class, "provinsiId", 'id');
     }
 
-    public function HasilClustering()
+    public function hasilClusters()
     {
-        return $this->hasMany(HasilCluster::class, 'id');
+        return $this->hasMany(HasilCluster::class, 'clusterId', 'id');
     }
 
 }

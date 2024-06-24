@@ -9,19 +9,20 @@ class Clustering extends Model
 {
     use HasFactory;
 
+    protected $table = 'clusterings';
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'eps', 'minpts', 'num_clusters', 'num_noise', 'num_clustered', 'silhouette_index', 'is_best'
+        'eps', 'minpts', 'jmlcluster', 'jmlnoice', 'jmltercluster', 'silhouette_index'
     ];
 
     public function Clustering()
     {
-        return $this->belongsTo(Province::class, 'provinsiId');
+        return $this->belongsTo(Province::class, 'provinsiId', 'id');
     }
 
-    public function HasilClustering()
+    public function hasilClusters()
     {
-        return $this->hasMany(HasilCluster::class, 'id');
+        return $this->hasMany(HasilCluster::class, 'clusterId', 'id');
     }
 }

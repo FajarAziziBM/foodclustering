@@ -125,9 +125,7 @@ class ProvinceController extends Controller
         // Simpan perubahan ke database
         $province->save();
 
-        // Return a JSON response
-        return response()->json(['success' => 'Data updated successfully']);
-
+        return redirect()->route('klasteringdata')->response()->json(['success' => 'Data updated successfully']);
     }
 
     /**

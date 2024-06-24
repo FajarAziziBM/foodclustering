@@ -16,5 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 */
 Route::get('/datas', [ProvincesController::class, 'index'])->name('postapidatas');
+Route::get('/getapidatas', [ProvincesController::class, 'hasilcluster'])->name('getapidatas');
 
-Route::post('/save-data', [ProvincesController::class, 'hasilcluster'])->name('saveData');
+// Route::get('/save-data', [ProvincesController::class, 'hasilcluster'])->name('saveData');

@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessClusteringList;
 use App\Models\Clustering;
+use App\Models\HasilCluster;
 use App\Models\Province;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use PSpell\Config;
+use Illuminate\Support\Facades\Validator;
 
 class ProvincesController extends Controller
 {
@@ -51,7 +54,7 @@ class ProvincesController extends Controller
 
             // Kirim data ke Flask untuk clustering
             $client = new Client();
-            $flask_url = 'http://127.0.0.1:5000/clustering';
+            $flask_url = 'http://127.0.0.1:8088/clustering';
             $response = $client->post($flask_url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -89,39 +92,32 @@ class ProvincesController extends Controller
         }
     }
 
+    public function hasilcluster(Request $request)
+    {
+        $results = $request['results'];
+        $best_labels_named = $request['province_clustered_data'];
 
+        return response()->json($results, $best_labels_named);
 
-    public function hasilcluster(Request $request){
         try {
+            // Validasi input yang diterima
+            $validatedData = $request->validate([
+                'results' => 'required|array',
+                'province_clustered_data' => 'required|array',
+            ]);
 
-            // Mendapatkan data hasil clustering
-            $results = $request->input('results');
-            $bestConfig = $request->input('best_config');
-            $provinceClusteredData = $request->input('province_clustered_data');
+            // Ambil data yang divalidasi
+            $results = $validatedData['results'];
+            $best_labels_named = $validatedData['province_clustered_data'];
 
+            // Dispatch the job to process clustering results
+            ProcessClusteringList::dispatch($results, $best_labels_named);
 
-            // Ambil data berdasarkan ID dari request
-            $savecluster = $results->Clustering::findOrFail();
-
-            // Simpan perubahan ke database
-            $savecluster->save();
-
-            // Di sini Anda dapat menyimpan data ke dalam database atau melakukan operasi lainnya sesuai kebutuhan
-            // Misalnya, menyimpan hasil clustering ke dalam tabel tertentu
-
-            // Contoh penyimpanan data hasil clustering
-            $savedData = [
-                'results' => json_decode($results, true),
-                'best_config' => json_decode($bestConfig, true),
-                'province_clustered_data' => $provinceClusteredData,
-            ];
-
-            // Lakukan operasi penyimpanan data ke database atau yang sesuai dengan kebutuhan aplikasi Anda
-
-            return response()->json(['message' => 'Clustering results successfully saved in Laravel', 'data' => $savedData]);
+            return response()->json(['message' => 'Clustering results queued successfully']);
         } catch (\Exception $e) {
-            Log::error('Error saving clustering results: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to save clustering results'], 500);
+            Log::error('Error processing clustering results: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to queue clustering results'], 500);
         }
+        return redirect()->route('klasteringdata')->with('success', 'Data Clustered');
     }
 }
