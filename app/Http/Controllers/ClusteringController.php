@@ -18,7 +18,6 @@ class ClusteringController extends Controller
     {
         if ($request->ajax()) {
             $provinces = Province::all();
-
             $grouped = $provinces->groupBy('tahun')->map(function ($yearGroup, $key) {
                 return (object) [
                     'id' => $key,
@@ -74,6 +73,8 @@ class ClusteringController extends Controller
             // Store results
             foreach ($validatedData['results'] as $result) {
                 Clustering::create([
+                    'provinsiId' => $result['id'],
+                    'eps' => $result['EPS'],
                     'eps' => $result['EPS'],
                     'minpts' => $result['MINPTS'],
                     'num_clusters' => $result['NUM_CLUSTERS'],

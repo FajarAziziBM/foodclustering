@@ -38,6 +38,7 @@ class ProcessClusteringList implements ShouldQueue
         try {
             foreach ($this->results as $data) {
                 $cluster = new Clustering();
+
                 $cluster->eps = $data['EPS'];
                 $cluster->minpts = $data['MINPTS'];
                 $cluster->jmlcluster = $data['NUM_CLUSTERS'];

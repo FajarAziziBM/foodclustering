@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('hasil_clusters', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clusterId')->constrained('clusterings')->onUpdate('cascade')->onDelete('restrict');
-            $table->string('cluster', 15);
+            $table->string('cluster', 10);
             $table->text('anggota_cluster');
+            $table->integer('tahun');
             $table->timestamps();
         });
     }

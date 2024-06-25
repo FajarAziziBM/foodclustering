@@ -12,10 +12,6 @@ class Clustering extends Model
     protected $table = 'clusterings';
     protected $guarded = ['id'];
 
-    protected $fillable = [
-        'eps', 'minpts', 'jmlcluster', 'jmlnoice', 'jmltercluster', 'silhouette_index'
-    ];
-
     public function Clustering()
     {
         return $this->belongsTo(Province::class, 'provinsiId', 'id');

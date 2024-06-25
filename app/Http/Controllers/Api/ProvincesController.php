@@ -7,6 +7,7 @@ use App\Jobs\ProcessClusteringList;
 use App\Models\Clustering;
 use App\Models\HasilCluster;
 use App\Models\Province;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -35,6 +36,7 @@ class ProvincesController extends Controller
 
             // Inisialisasi array untuk menyimpan data provinsi
             $datasProv = [
+                'id' => [],
                 'tahun' => $request->tahun,
                 'namaprovinsi' => [],
                 'luaspanen' => [],
@@ -44,6 +46,7 @@ class ProvincesController extends Controller
 
             // Loop melalui data provinces untuk mengisi array $datasProv
             foreach ($provinces as $item) {
+                $datasProv['id'][] = $item->id;
                 $datasProv['namaprovinsi'][] = $item->namaprovinsi;
                 $datasProv['luaspanen'][] = $item->luaspanen;
                 $datasProv['produktivitas'][] = $item->produktivitas;
@@ -65,6 +68,40 @@ class ProvincesController extends Controller
             // Mendapatkan status kode respons dan data respons dari Flask
             $statusCode = $response->getStatusCode();
             $responseData = $response->getBody()->getContents();
+            $data = json_decode($responseData, true);
+            // Ambil data yang divalidasi
+
+            if (isset($data['data'])) {
+                $data = $data['data']; // Ambil data di dalam kunci 'data'
+
+                // Sekarang Anda bisa mengakses 'province_clustered_data' dan 'results'
+                if (isset($data['province_clustered_data'])) {
+                    $best_labels_named = $data['province_clustered_data'];
+                    // Sekarang $best_labels_named berisi nilai dari province_clustered_data
+                    // Debug untuk memastikan data berhasil diambil
+                } else {
+                    // Handle jika 'province_clustered_data' tidak ada
+                    throw new Exception('Data "province_clustered_data" tidak ditemukan dalam respons');
+                }
+
+                // Misalnya, jika Anda juga memerlukan 'results'
+                if (isset($data['results'])) {
+                    $results = $data['results'];
+                    // Lakukan sesuatu dengan $results
+
+                } else {
+                    // Handle jika 'results' tidak ada
+                    throw new Exception('Data "results" tidak ditemukan dalam respons');
+                }
+            } else {
+                // Handle jika 'data' tidak ada dalam respons
+                throw new Exception('Data "data" tidak ditemukan dalam respons');
+            }
+            dd($results);
+            dd($best_labels_named);
+
+                // Dispatch the job to process clustering results
+            ProcessClusteringList::dispatch($results, $best_labels_named);
 
             // Periksa apakah respons dari Flask adalah sukses
             if ($statusCode !== 200) {
@@ -74,12 +111,7 @@ class ProvincesController extends Controller
                 ], $statusCode);
             }
 
-            // Mengembalikan respons JSON berhasil dengan data dari Flask
-            return response()->json([
-                'success' => true,
-                'message' => 'Data successfully sent to clustering endpoint',
-                'data' => json_decode($responseData, true), // Decode JSON response from Flask
-            ]);
+            return response()->json(['message' => 'Clustering results queued successfully']);
         } catch (\Exception $e) {
             // Menangkap kesalahan dan logging
             Log::error('Error processing data: ' . $e->getMessage());
@@ -92,32 +124,4 @@ class ProvincesController extends Controller
         }
     }
 
-    public function hasilcluster(Request $request)
-    {
-        $results = $request['results'];
-        $best_labels_named = $request['province_clustered_data'];
-
-        return response()->json($results, $best_labels_named);
-
-        try {
-            // Validasi input yang diterima
-            $validatedData = $request->validate([
-                'results' => 'required|array',
-                'province_clustered_data' => 'required|array',
-            ]);
-
-            // Ambil data yang divalidasi
-            $results = $validatedData['results'];
-            $best_labels_named = $validatedData['province_clustered_data'];
-
-            // Dispatch the job to process clustering results
-            ProcessClusteringList::dispatch($results, $best_labels_named);
-
-            return response()->json(['message' => 'Clustering results queued successfully']);
-        } catch (\Exception $e) {
-            Log::error('Error processing clustering results: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to queue clustering results'], 500);
-        }
-        return redirect()->route('klasteringdata')->with('success', 'Data Clustered');
-    }
 }

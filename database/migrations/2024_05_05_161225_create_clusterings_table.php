@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('clusterings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('provinsiId')->constrained('provinces')->onUpdate('cascade')->onDelete('restrict');
             $table->double('eps', 15);
             $table->double('minpts', 15);
             $table->integer('jmlcluster');

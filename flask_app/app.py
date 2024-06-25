@@ -32,7 +32,6 @@ def dbscan_trials(data, eps_values, min_samples_values):
                     num_clusters = len(set(labels)) - (1 if -1 in labels else 0)
                     noise_points = np.sum(labels == -1)
                     clustered_points = len(labels) - noise_points
-
                     result = {
                         "EPS": eps,
                         "MINPTS": min_samples,
@@ -41,6 +40,7 @@ def dbscan_trials(data, eps_values, min_samples_values):
                         "NUM_CLUSTERED": clustered_points,
                         "SILHOUETTE_INDEX": silhouette_avg
                     }
+
                     results.append(result)
 
                     if silhouette_avg > best_score:
@@ -58,8 +58,8 @@ def getData():
     try:
         request_data = request.get_json()
         data = pd.DataFrame(request_data)
-        a = data.loc[:33, ["namaprovinsi", "luaspanen", "produktivitas", "produksi"]]
-        data_values = a.iloc[:, 1:].values.astype(float)
+        a = data.loc[:33, ["id", "namaprovinsi", "luaspanen", "produktivitas", "produksi"]]
+        data_values = a.iloc[:, 2:].values.astype(float)
         scaler = StandardScaler()
         data_scaled = scaler.fit_transform(data_values)
 
@@ -67,31 +67,21 @@ def getData():
         min_samples_values = range(2, 10)
 
         results, best_config, best_labels = dbscan_trials(data_scaled, eps_values, min_samples_values)
-
         results_df = pd.DataFrame(results)
 
+        results_df['id'] = a['id']
+
         best_labels_named = {a["namaprovinsi"][i]: int(label) for i, label in enumerate(best_labels)}
-        logging.info("Best labels named: %s", best_labels_named)
 
         results_json = results_df.to_json(orient='records')
+
 
         data_to_send = {
             "results": json.loads(results_json),
             "province_clustered_data": best_labels_named
         }
 
-        return jsonify(data_to_send)
-
-        laravel_endpoint_url = "http://127.0.0.1:8080/api/getapidatas"
-        try:
-            response = requests.post(laravel_endpoint_url, data_to_send)
-            response.raise_for_status()
-            logging.info("Data sent successfully to backend Laravel!")
-        except Exception as e:
-            logging.error("Error occurred while sending data to backend Laravel: %s", e)
-            return jsonify({"error": "Failed to send data to backend"}), 500
-
-        return jsonify({"message": "Data loaded and scaled successfully", "province_clustered_data": best_labels_named})
+        return jsonify({"data": data_to_send})
 
     except Exception as e:
         logging.error("Error in getData function: %s", str(e))

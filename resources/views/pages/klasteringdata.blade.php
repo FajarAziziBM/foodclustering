@@ -55,8 +55,9 @@
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
             });
+        });
 
-            $(document).on('click', '.btn-cluster', function(e) {
+        $(document).on('click', '.btn-cluster', function(e) {
                 e.preventDefault();
                 var tahun = $(this).closest('tr').find('td:eq(0)').text();
                 $.ajax({
@@ -81,6 +82,5 @@
                     }
                 });
             });
-        });
     </script>
 @endpush

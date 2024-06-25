@@ -11,9 +11,6 @@ class HasilCluster extends Model
 
     protected $table = 'hasil_clusters';
     protected $guarded = ['id'];
-    protected $fillable = [
-        'cluster', 'anggota_cluster'
-    ];
 
     public function clustering()
     {
