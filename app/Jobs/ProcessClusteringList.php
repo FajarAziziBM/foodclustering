@@ -16,7 +16,7 @@ class ProcessClusteringList implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $results;
-    protected $provinceClusteredData;
+    protected $bestlabelsnamed;
 
     /**
      * Create a new job instance.
@@ -24,10 +24,10 @@ class ProcessClusteringList implements ShouldQueue
      * @param array $results
      * @param array $provinceClusteredData
      */
-    public function __construct(array $results, array $provinceClusteredData)
+    public function __construct(array $results, array $bestlabelsnamed)
     {
         $this->results = $results;
-        $this->provinceClusteredData = $provinceClusteredData;
+        $this->bestlabelsnamed = $bestlabelsnamed;
     }
 
     /**
@@ -38,27 +38,36 @@ class ProcessClusteringList implements ShouldQueue
         try {
             foreach ($this->results as $data) {
                 $cluster = new Clustering();
-
                 $cluster->eps = $data['EPS'];
                 $cluster->minpts = $data['MINPTS'];
                 $cluster->jmlcluster = $data['NUM_CLUSTERS'];
                 $cluster->jmlnoice = $data['NUM_NOISE'];
                 $cluster->jmltercluster = $data['NUM_CLUSTERED'];
                 $cluster->silhouette_index = $data['SILHOUETTE_INDEX'];
+                $cluster->tahun = $data['year'];
                 $cluster->save();
+            }
 
-                foreach ($this->provinceClusteredData as $label) {
-                    $finalcluster = new HasilCluster();
-                    $finalcluster->cluster = $label['NUM_CLUSTERS'];
-                    $finalcluster->anggota_cluster = $label['namaprovinsi'];
-                    $finalcluster->clusterId = $cluster->id;
-                    $finalcluster->save();
+            $clusteredData = $this->bestlabelsnamed['province_clustered_data'];
+
+            foreach ($clusteredData as $clusterName => $provinces) {
+                if ($clusterName === 'year') {
+                    continue;
+                }
+                foreach ($provinces as $province) {
+                    $hasilCluster = new HasilCluster();
+                    $hasilCluster->cluster = $clusterName;
+                    $hasilCluster->anggota_cluster = $province;
+                    $hasilCluster->tahun = $clusteredData['year']; // Assuming 'year' is in the top level
+                    $hasilCluster->save();
                 }
             }
 
             Log::info('Clustering results processed successfully');
         } catch (\Exception $e) {
-            Log::error('Error processing clustering results: ' . $e->getMessage());
+            // Handle exception
+            Log::error('Error saving cluster results: ' . $e->getMessage());
+            throw $e;
         }
     }
 }

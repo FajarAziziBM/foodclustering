@@ -12,8 +12,4 @@ class HasilCluster extends Model
     protected $table = 'hasil_clusters';
     protected $guarded = ['id'];
 
-    public function clustering()
-    {
-        return $this->belongsTo(Clustering::class, 'clusterId', 'id');
-    }
 }

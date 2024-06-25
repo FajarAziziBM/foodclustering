@@ -12,13 +12,4 @@ class Clustering extends Model
     protected $table = 'clusterings';
     protected $guarded = ['id'];
 
-    public function Clustering()
-    {
-        return $this->belongsTo(Province::class, 'provinsiId', 'id');
-    }
-
-    public function hasilClusters()
-    {
-        return $this->hasMany(HasilCluster::class, 'clusterId', 'id');
-    }
 }

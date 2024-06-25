@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('jmlnoice');
             $table->integer('jmltercluster');
             $table->double('silhouette_index', 15);
+            $table->integer('tahun');
             $table->timestamps();
         });
     }

@@ -58,7 +58,7 @@ def getData():
     try:
         request_data = request.get_json()
         data = pd.DataFrame(request_data)
-        a = data.loc[:33, ["id", "namaprovinsi", "luaspanen", "produktivitas", "produksi"]]
+        a = data.loc[:33, ["tahun", "namaprovinsi", "luaspanen", "produktivitas", "produksi"]]
         data_values = a.iloc[:, 2:].values.astype(float)
         scaler = StandardScaler()
         data_scaled = scaler.fit_transform(data_values)
@@ -69,16 +69,33 @@ def getData():
         results, best_config, best_labels = dbscan_trials(data_scaled, eps_values, min_samples_values)
         results_df = pd.DataFrame(results)
 
-        results_df['id'] = a['id']
+        # Add 'year' column to results_df
+        year = int(a["tahun"].iloc[0])
+        results_df['year'] = year
 
-        best_labels_named = {a["namaprovinsi"][i]: int(label) for i, label in enumerate(best_labels)}
+        province_names = a["namaprovinsi"].tolist()
+        # Map cluster labels to province names
+        cluster_to_provinces = {}
+        for label, province in zip(best_labels, province_names):
+            if label not in cluster_to_provinces:
+                cluster_to_provinces[label] = []
+            cluster_to_provinces[label].append(province)
 
+        # Remove noise points (-1 label)
+        if -1 in cluster_to_provinces:
+            del cluster_to_provinces[-1]
+
+        # Convert cluster_to_provinces to JSON-serializable format
+        num_clustered = {f'Cluster_{k}': v for k, v in cluster_to_provinces.items()}
+        num_clustered["year"] = year
+
+        # Convert DataFrame results_df to JSON
         results_json = results_df.to_json(orient='records')
 
-
+        # Prepare data to send
         data_to_send = {
             "results": json.loads(results_json),
-            "province_clustered_data": best_labels_named
+            "province_clustered_data": num_clustered
         }
 
         return jsonify({"data": data_to_send})

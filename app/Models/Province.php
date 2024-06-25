@@ -12,9 +12,4 @@ class Province extends Model
     protected $guarded = ['id'];
     protected $fillable = ['namaprovinsi', 'luaspanen', 'produktivitas', 'produksi', 'tahun'];
 
-    public function hasilClusters()
-    {
-        return $this->hasMany(HasilCluster::class, 'clusterId', 'id');
-    }
-
 }

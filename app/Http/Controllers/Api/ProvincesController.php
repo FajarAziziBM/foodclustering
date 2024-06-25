@@ -65,62 +65,41 @@ class ProvincesController extends Controller
                 'body' => $jsonDataProv,
             ]);
 
-            // Mendapatkan status kode respons dan data respons dari Flask
-            $statusCode = $response->getStatusCode();
-            $responseData = $response->getBody()->getContents();
-            $data = json_decode($responseData, true);
-            // Ambil data yang divalidasi
+            $responseData = json_decode($response->getBody()->getContents(), true);
 
-            if (isset($data['data'])) {
-                $data = $data['data']; // Ambil data di dalam kunci 'data'
+            // Proses respons JSON dari Flask
+            if (isset($responseData['data'])) {
+                $data = $responseData['data'];
 
-                // Sekarang Anda bisa mengakses 'province_clustered_data' dan 'results'
-                if (isset($data['province_clustered_data'])) {
-                    $best_labels_named = $data['province_clustered_data'];
-                    // Sekarang $best_labels_named berisi nilai dari province_clustered_data
-                    // Debug untuk memastikan data berhasil diambil
-                } else {
-                    // Handle jika 'province_clustered_data' tidak ada
-                    throw new Exception('Data "province_clustered_data" tidak ditemukan dalam respons');
-                }
-
-                // Misalnya, jika Anda juga memerlukan 'results'
+                // Periksa keberadaan 'results' dalam respons
                 if (isset($data['results'])) {
                     $results = $data['results'];
-                    // Lakukan sesuatu dengan $results
-
                 } else {
-                    // Handle jika 'results' tidak ada
                     throw new Exception('Data "results" tidak ditemukan dalam respons');
                 }
+
+                // Periksa keberadaan 'province_clustered_data' dalam respons
+                if (isset($data['province_clustered_data'])) {
+                    $bestlabelsnamed = $data['province_clustered_data'];
+                } else {
+                    throw new Exception('Data "province_clustered_data" tidak ditemukan dalam respons');
+                }
             } else {
-                // Handle jika 'data' tidak ada dalam respons
                 throw new Exception('Data "data" tidak ditemukan dalam respons');
             }
-            dd($results);
-            dd($best_labels_named);
 
-                // Dispatch the job to process clustering results
-            ProcessClusteringList::dispatch($results, $best_labels_named);
+            // Dispatch job untuk memproses data klastering
+            ProcessClusteringList::dispatch($results, $bestlabelsnamed);
 
-            // Periksa apakah respons dari Flask adalah sukses
-            if ($statusCode !== 200) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to process data: ' . $responseData,
-                ], $statusCode);
-            }
-
+            // Berhasil jika tidak ada exception yang dilempar
             return response()->json(['message' => 'Clustering results queued successfully']);
-        } catch (\Exception $e) {
-            // Menangkap kesalahan dan logging
-            Log::error('Error processing data: ' . $e->getMessage());
 
-            // Mengembalikan respons JSON gagal jika terjadi kesalahan
+        } catch (Exception $e) {
+            // Tangani kesalahan dengan mengembalikan respons JSON
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to process data: ' . $e->getMessage(),
-            ], 500);
+                'message' => 'Error processing data: ' . $e->getMessage(),
+            ], 500); // Kode status 500 untuk kesalahan server
         }
     }
 
