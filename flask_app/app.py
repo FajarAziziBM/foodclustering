@@ -68,37 +68,32 @@ def getData():
 
         results, best_config, best_labels = dbscan_trials(data_scaled, eps_values, min_samples_values)
         results_df = pd.DataFrame(results)
-
-        # Add 'year' column to results_df
         year = int(a["tahun"].iloc[0])
         results_df['year'] = year
 
+        # Group provinces by cluster labels
         province_names = a["namaprovinsi"].tolist()
-        # Map cluster labels to province names
         cluster_to_provinces = {}
         for label, province in zip(best_labels, province_names):
-            if label not in cluster_to_provinces:
-                cluster_to_provinces[label] = []
-            cluster_to_provinces[label].append(province)
+            if label == -1:
+                continue  # Skip noise points
+            cluster_key = f"cluster_{label}"
+            if cluster_key not in cluster_to_provinces:
+                cluster_to_provinces[cluster_key] = {"provinces": "", "year": year}
+            if cluster_to_provinces[cluster_key]["provinces"]:
+                cluster_to_provinces[cluster_key]["provinces"] += ", "
+            cluster_to_provinces[cluster_key]["provinces"] += province
 
-        # Remove noise points (-1 label)
-        if -1 in cluster_to_provinces:
-            del cluster_to_provinces[-1]
-
-        # Convert cluster_to_provinces to JSON-serializable format
-        num_clustered = {f'Cluster_{k}': v for k, v in cluster_to_provinces.items()}
-        num_clustered["year"] = year
+        # Convert cluster_to_provinces to the desired format
+        province_clustered_data = [
+            {"cluster": key, "provinces": value["provinces"], "year": value["year"]}
+            for key, value in cluster_to_provinces.items()
+        ]
 
         # Convert DataFrame results_df to JSON
         results_json = results_df.to_json(orient='records')
 
-        # Prepare data to send
-        data_to_send = {
-            "results": json.loads(results_json),
-            "province_clustered_data": num_clustered
-        }
-
-        return jsonify({"data": data_to_send})
+        return jsonify({"results": json.loads(results_json), "hasil_cluster": province_clustered_data})
 
     except Exception as e:
         logging.error("Error in getData function: %s", str(e))

@@ -48,19 +48,13 @@ class ProcessClusteringList implements ShouldQueue
                 $cluster->save();
             }
 
-            $clusteredData = $this->bestlabelsnamed['province_clustered_data'];
+            foreach ($this-> bestlabelsnamed as $data) {
 
-            foreach ($clusteredData as $clusterName => $provinces) {
-                if ($clusterName === 'year') {
-                    continue;
-                }
-                foreach ($provinces as $province) {
-                    $hasilCluster = new HasilCluster();
-                    $hasilCluster->cluster = $clusterName;
-                    $hasilCluster->anggota_cluster = $province;
-                    $hasilCluster->tahun = $clusteredData['year']; // Assuming 'year' is in the top level
-                    $hasilCluster->save();
-                }
+            $hasilCluster = new HasilCluster();
+            $hasilCluster->cluster = $data['cluster'];
+            $hasilCluster->anggota_cluster = $data['provinces'];
+            $hasilCluster->tahun = $data['year'];
+            $hasilCluster->save();
             }
 
             Log::info('Clustering results processed successfully');

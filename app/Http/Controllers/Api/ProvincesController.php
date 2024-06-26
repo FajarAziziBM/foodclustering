@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessBestLabels;
 use App\Jobs\ProcessClusteringList;
 use App\Models\Clustering;
 use App\Models\HasilCluster;
@@ -67,29 +68,24 @@ class ProvincesController extends Controller
 
             $responseData = json_decode($response->getBody()->getContents(), true);
 
-            // Proses respons JSON dari Flask
-            if (isset($responseData['data'])) {
-                $data = $responseData['data'];
-
-                // Periksa keberadaan 'results' dalam respons
-                if (isset($data['results'])) {
+            if (isset($responseData)) {
+                $data = $responseData;
+                if (isset($data)) {
                     $results = $data['results'];
                 } else {
                     throw new Exception('Data "results" tidak ditemukan dalam respons');
                 }
 
-                // Periksa keberadaan 'province_clustered_data' dalam respons
-                if (isset($data['province_clustered_data'])) {
-                    $bestlabelsnamed = $data['province_clustered_data'];
+                // Periksa keberadaan 'hasil_cluster' dalam respons
+                if (isset($data['hasil_cluster'])) {
+                    $hasil_cluster = $data['hasil_cluster'];
                 } else {
-                    throw new Exception('Data "province_clustered_data" tidak ditemukan dalam respons');
+                    throw new Exception('Data "hasil_cluster" tidak ditemukan dalam respons');
                 }
+                ProcessClusteringList::dispatch($results, $hasil_cluster);
             } else {
                 throw new Exception('Data "data" tidak ditemukan dalam respons');
             }
-
-            // Dispatch job untuk memproses data klastering
-            ProcessClusteringList::dispatch($results, $bestlabelsnamed);
 
             // Berhasil jika tidak ada exception yang dilempar
             return response()->json(['message' => 'Clustering results queued successfully']);
