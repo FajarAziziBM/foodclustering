@@ -22,31 +22,16 @@
 
                     <div class="card-body ">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-striped" style="width:100%" id="dataTable1">
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> Eps </th>
                                         <th> minPts </th>
                                         <th> Jumlah cluster </th>
                                         <th> Jumlah Noise </th>
-                                        <th class="text-right"> Jumlah Tercluster </th>
+                                        <th > Jumlah Tercluster </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td> 350 </td>
-                                        <td> 3 </td>
-                                        <td> 2 </td>
-                                        <td> 0 </td>
-                                        <td class="text-right"> 180 </td>
-                                    </tr>
-                                    <tr>
-                                        <td> 400 </td>
-                                        <td> 3 </td>
-                                        <td> 2 </td>
-                                        <td> 0 </td>
-                                        <td class="text-right"> 180 </td>
-                                    </tr>
                             </table>
                         </div>
                         <hr>
@@ -68,25 +53,14 @@
 
                     <div class="card-body ">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-striped" style="width:100%" id="dataTable2">
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> Eps </th>
                                         <th> minPts </th>
-                                        <th class="text-right"> Silhouette Indek </th>
+                                        <th> Silhouette Indek </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td> 350 </td>
-                                        <td> 3 </td>
-                                        <td class="text-right"> 0,5 </td>
-                                    </tr>
-                                    <tr>
-                                        <td> 400 </td>
-                                        <td> 3 </td>
-                                        <td class="text-right"> 0,7 </td>
-                                    </tr>
                             </table>
                         </div>
                         <hr>
@@ -108,24 +82,17 @@
 
                     <div class="card-body ">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table id="dataTable3" class="table table-striped" style="width:100%">
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> Eps </th>
                                         <th> minPts </th>
                                         <th> Jumlah cluster </th>
                                         <th> Jumlah Noise </th>
-                                        <th class="text-right"> Jumlah Tercluster </th>
+                                        <th> Jumlah Tercluster </th>
+                                        <th> Silhouette Indek </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td> 350 </td>
-                                        <td> 3 </td>
-                                        <td> 2 </td>
-                                        <td> 0 </td>
-                                        <td class="text-right"> 180 </td>
-                                    </tr>
                             </table>
                         </div>
                         <hr>
@@ -141,7 +108,60 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
+            var table = $('#dataTable1').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: true,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
+                    type: 'GET'
+                },
+                columns: [
+                    { data: 'eps', name: 'eps' },
+                    { data: 'minpts', name: 'minpts' },
+                    { data: 'jmlcluster', name: 'jmlcluster' },
+                    { data: 'jmlnoice', name: 'jmlnoice' },
+                    { data: 'jmltercluster', name: 'jmltercluster' }
+                ],
+            });
+        });
+        $(document).ready(function() {
+            var table = $('#dataTable2').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: true,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
+                    type: 'GET'
+                },
+                columns: [
+                    { data: 'eps', name: 'eps' },
+                    { data: 'minpts', name: 'minpts' },
+                    { data: 'silhouette_index', name: 'silhouette_index' }
+                ],
+            });
+        });
+        $(document).ready(function() {
+            var table = $('#dataTable3').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: true,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
+                    type: 'GET'
+                },
+                columns: [
+                    { data: 'eps', name: 'eps' },
+                    { data: 'minpts', name: 'minpts' },
+                    { data: 'jmlcluster', name: 'jmlcluster' },
+                    { data: 'jmlnoice', name: 'jmlnoice' },
+                    { data: 'jmltercluster', name: 'jmltercluster' },
+                    { data: 'silhouette_index', name: 'silhouette_index' }
+                ],
+            });
         });
     </script>
 @endpush

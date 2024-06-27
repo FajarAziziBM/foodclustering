@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clustering;
+use App\Models\HasilCluster;
 use App\Models\Province;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -30,11 +31,10 @@ class ClusteringController extends Controller
             })->values();
 
             return DataTables::of($grouped)
-                ->addColumn('action', function($row) {
+                ->addColumn('action', function ($row) {
                     $viewBtn = '<a href="' . route('hasilklaster', $row->id) . '" class="btn btn-info btn-sm"> <i class="fa-regular fa-eye"></i></a>';
                     $clusterBtn = '<a href="' . route('sendDatas', ['tahun' => $row->tahun]) . '" class="btn btn-success btn-sm btn-cluster"> <i class="fa-duotone fa-circle-nodes"></i></a>';
-                    $deleteBtn = '<a href="' . route('hasilklaster', $row->id) . '" class="btn btn-danger btn-sm"> <i class="fas fa-trash-can"></i></a>';
-
+                    $deleteBtn = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' . $row->id . ')"><i class="fas fa-trash-can"></i></button>';
                     return '<td class="text-right">' . $clusterBtn . ' ' . $viewBtn . ' ' . $deleteBtn . '</td>';
                 })
                 ->rawColumns(['action'])
@@ -50,7 +50,24 @@ class ClusteringController extends Controller
     public function create()
     {
         //
-        return view('pages.hasilklater');
+    }
+
+    public function hasilcluster($id, Request $request)
+    {
+        $datas1 = Clustering::where('tahun', $id)
+            ->orderBy('silhouette_index', 'desc')
+            ->orderBy('jmltercluster', 'desc')
+            ->select('id', 'eps', 'minpts', 'jmlcluster', 'jmlnoice', 'jmltercluster', 'silhouette_index')
+            ->first();
+
+        $idku = $id;
+        if ($request->ajax()) {
+            $datas = Clustering::where('tahun', $id)->get();
+            return DataTables::of($datas)
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return view('pages.hasilklater')->with(compact('idku',));
     }
 
     /**
@@ -111,9 +128,13 @@ class ClusteringController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Clustering $clustering)
+    public function show(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = HasilCluster::select('cluster', 'anggota_cluster')->get();
+            return DataTables::of($data)->make(true);
+        }
+
         return view('pages.finalhasilklaster');
     }
 
@@ -138,12 +159,29 @@ class ClusteringController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id, Clustering $clustering)
+    public function destroy(Request $request)
     {
-        //
-        $clustering = Clustering::findOrFail($id);
-        $clustering->delete();
-        return redirect()->route('klasteringdata')->with('success', 'Data deleted successfully');
+        try {
+            // Ambil tahun dari request
+            $tahun = $request->tahun;
 
+            // Fetch and delete Clustering models
+            $datas1 = Clustering::where('tahun', $tahun)->get();
+            foreach ($datas1 as $data) {
+                $data->delete();
+            }
+
+            // Fetch and delete HasilCluster models
+            $datas2 = HasilCluster::where('tahun', $tahun)->get();
+            foreach ($datas2 as $data) {
+                $data->delete();
+            }
+
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+        return redirect()->route('klasteringdata')->with('success', 'Data deleted successfully');
     }
 }

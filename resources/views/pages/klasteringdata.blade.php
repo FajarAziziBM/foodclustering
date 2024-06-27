@@ -19,11 +19,11 @@
 
                     <div class="card-body ">
                         <div class="table-responsive">
-                            <table class="table" id="dataTable">
+                            <table class="table table-striped" style="width:100%" id="dataTable">
                                 <thead class=" text-primary">
                                     <tr>
                                         <th>Tahun</th>
-                                        <th class="text-right">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -37,14 +37,14 @@
     </div>
 
 @endsection
-
 @push('scripts')
     <script>
         $(document).ready(function() {
             var table = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
-                paging: false,
+                paging: true,
+                searching: false,
                 scrollCollapse: true,
                 ajax: {
                     url: "{{ route('klasteringdata') }}",
@@ -55,13 +55,12 @@
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
             });
-        });
 
-        $(document).on('click', '.btn-cluster', function(e) {
+            $(document).on('click', '.btn-cluster', function(e) {
                 e.preventDefault();
                 var tahun = $(this).closest('tr').find('td:eq(0)').text();
                 $.ajax({
-                    url: "{{ route('sendDatas') }}", // Endpoint untuk clustering
+                    url: "{{ route('sendDatas') }}",
                     type: 'GET',
                     data: {
                         tahun: tahun
@@ -82,5 +81,35 @@
                     }
                 });
             });
+
+            $(document).on('click', '.btn-danger', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var tahun = $(this).closest('tr').find('td:eq(0)').text();
+                $.ajax({
+                    url: "{{ route('delete.cluster', ':id') }}".replace(':id', id),
+                    type: 'DELETE', // Use DELETE method for delete action
+                    data: {
+                        _token: "{{ csrf_token() }}", // CSRF token
+                        tahun: tahun
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Data klaster berhasil dihapus untuk tahun ' + tahun);
+                            // Handle success, e.g., update UI or reload data
+                            table.ajax.reload(); // Reload data table
+                        } else {
+                            alert('Gagal menghapus data klaster untuk tahun ' + tahun + ': ' + response.message);
+                            // Handle failure scenario
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat menghapus data klaster untuk tahun ' + tahun);
+                        // Handle error scenario
+                    }
+                });
+            });
+        });
     </script>
 @endpush

@@ -28,7 +28,7 @@
 
                     <div class="card-body ">
                         <div class="table-responsive">
-                        <table class="table" id="inputdatas">
+                        <table class="table table-striped" style="width:100%" id="inputdatas">
                                     <thead class=" text-primary">
                                         <tr>
                                             <th> Provinsi </th>
@@ -36,7 +36,7 @@
                                             <th> Produktivitas(ku/ha)</th>
                                             <th> Produksi(ton)</th>
                                             <th> Tahun  </th>
-                                            <th class="text-right"> Action </th>
+                                            <th> Action </th>
                                         </tr>
                                     </thead>
                                         </tr>
@@ -56,7 +56,7 @@
             var table = $('#inputdatas').DataTable({
                     processing: true,
                     serverSide: true,
-                    paging: false,
+                    paging: true,
                     scrollCollapse: true,
                     ajax: "{{ route('inputdata') }}",
                     columns: [
