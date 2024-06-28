@@ -82,13 +82,15 @@ class ProvincesController extends Controller
                 } else {
                     throw new Exception('Data "hasil_cluster" tidak ditemukan dalam respons');
                 }
+
                 ProcessClusteringList::dispatch($results, $hasil_cluster);
+
             } else {
                 throw new Exception('Data "data" tidak ditemukan dalam respons');
             }
 
-            // Berhasil jika tidak ada exception yang dilempar
-            return response()->json(['message' => 'Clustering results queued successfully']);
+             // Berhasil jika tidak ada exception yang dilempar
+            return response()->json(['success' => true, 'message' => 'Clustering for year ' . $request->tahun . ' successfully completed']);
 
         } catch (Exception $e) {
             // Tangani kesalahan dengan mengembalikan respons JSON

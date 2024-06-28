@@ -17,7 +17,7 @@
                     <p>{{ __('Dashboard') }}</p>
                 </a>
             </li>
-            <li class="{{ $elementActive == 'inputdata' || $elementActive == 'klasteringdata' || $elementActive == 'hasilklaster' ? 'active' : '' }}">
+            <li class="{{ $elementActive == 'inputdata' || $elementActive == 'klasteringdata' || $elementActive == 'hasilklasterdbscan' ? 'active' : '' }}">
                 <a data-toggle="collapse" aria-expanded="true" href="#laravelExamples">
                     <i class="nc-icon nc-chart-pie-36"></i>
                     <p>

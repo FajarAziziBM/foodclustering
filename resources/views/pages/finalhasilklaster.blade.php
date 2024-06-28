@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => 'Hasil Klaster',
-    'elementActive' => 'hasilklaster',
+    'elementActive' => 'hasilklasterdbscan',
 ])
 
 @section('content')
@@ -26,6 +26,7 @@
                 </form>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-8">
                 <div class="card card-chart">
@@ -39,7 +40,7 @@
                                 <thead class=" text-primary">
                                     <tr>
                                         <th> Cluster </th>
-                                        <th> Anggota Cluster </th>
+                                        <th class="text-right"> Anggota Cluster </th>
                                     </tr>
                                 </thead>
                             </table>
@@ -69,6 +70,28 @@
                 </div>
             </div>
 
+            <div class="col-md-12">
+                <div class="card card-chart">
+                    <div class="card-header">
+                        <h5 class="card-title">Analisis Tahunan</h5>
+                        <p class="card-category">Peningkatan pertahun</p>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="speedChart" width="400" height="100"></canvas>
+                    </div>
+                    <div class="card-footer">
+                        <div class="chart-legend">
+                            <i class="fa fa-circle text-info"></i> Now
+                            <i class="fa fa-circle text-warning"></i> Before
+                        </div>
+                        <hr />
+                        <div class="card-stats">
+                            <i class="fa fa-check"></i> Data information certified
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection
@@ -92,7 +115,8 @@
                     },
                     {
                         data: 'anggota_cluster',
-                        name: 'anggota_cluster'
+                        name: 'anggota_cluster',
+                        className: 'text-right'
                     },
                 ],
             });
@@ -105,7 +129,7 @@
                 data.forEach(function(item) {
                     clusterLabels.push(item.cluster);
                     anggotaClusterData.push(item.anggota_cluster.split(',')
-                    .length); // Assuming anggota_cluster is a comma-separated list
+                        .length); // Assuming anggota_cluster is a comma-separated list
                 });
 
                 var ctx = document.getElementById('chartCluster').getContext('2d');
@@ -146,6 +170,50 @@
             // Initial chart update on page load
             updateChart([]);
 
+        });
+
+        $(document).ready(function() {
+            var speedCanvas = document.getElementById("speedChart").getContext('2d');
+
+            var dataFirst = {
+                data: [0, 19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70],
+                fill: false,
+                borderColor: '#fbc658',
+                backgroundColor: 'transparent',
+                pointBorderColor: '#fbc658',
+                pointRadius: 4,
+                pointHoverRadius: 4,
+                pointBorderWidth: 8,
+            };
+
+            var dataSecond = {
+                data: [0, 5, 10, 12, 20, 27, 30, 34, 42, 45, 55, 63],
+                fill: false,
+                borderColor: '#51CACF',
+                backgroundColor: 'transparent',
+                pointBorderColor: '#51CACF',
+                pointRadius: 4,
+                pointHoverRadius: 4,
+                pointBorderWidth: 8
+            };
+
+            var speedData = {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [dataFirst, dataSecond]
+            };
+
+            var chartOptions = {
+                legend: {
+                    display: true,
+                    position: 'top',
+                }
+            };
+
+            var lineChart = new Chart(speedCanvas, {
+                type: 'line',
+                data: speedData,
+                options: chartOptions
+            });
         });
     </script>
 @endpush

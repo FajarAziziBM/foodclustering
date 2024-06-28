@@ -34,7 +34,7 @@ class ClusteringController extends Controller
                 ->addColumn('action', function ($row) {
                     $viewBtn = '<a href="' . route('hasilklaster', $row->id) . '" class="btn btn-info btn-sm"> <i class="fa-regular fa-eye"></i></a>';
                     $clusterBtn = '<a href="' . route('sendDatas', ['tahun' => $row->tahun]) . '" class="btn btn-success btn-sm btn-cluster"> <i class="fa-duotone fa-circle-nodes"></i></a>';
-                    $deleteBtn = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' . $row->id . ')"><i class="fas fa-trash-can"></i></button>';
+                    $deleteBtn = '<button type="button" class="btn btn-danger btn-sm" data-id="' . $row->id . '" data-tahun="' . $row->tahun . '" onclick="deleteData(' . $row->id . ')"><i class="fas fa-trash-can"></i></button>';
                     return '<td class="text-right">' . $clusterBtn . ' ' . $viewBtn . ' ' . $deleteBtn . '</td>';
                 })
                 ->rawColumns(['action'])
@@ -54,20 +54,39 @@ class ClusteringController extends Controller
 
     public function hasilcluster($id, Request $request)
     {
-        $datas1 = Clustering::where('tahun', $id)
-            ->orderBy('silhouette_index', 'desc')
-            ->orderBy('jmltercluster', 'desc')
-            ->select('id', 'eps', 'minpts', 'jmlcluster', 'jmlnoice', 'jmltercluster', 'silhouette_index')
-            ->first();
-
         $idku = $id;
+
         if ($request->ajax()) {
-            $datas = Clustering::where('tahun', $id)->get();
-            return DataTables::of($datas)
-                ->addIndexColumn()
-                ->make(true);
+            $type = $request->input('type', 'datas');
+
+            if ($type == 'datas1') {
+                $datas1 = Clustering::where('tahun', $id)
+                    ->orderBy('silhouette_index', 'desc')
+                    ->orderBy('jmltercluster', 'desc')
+                    ->select('eps', 'minpts', 'jmlcluster', 'jmlnoice', 'jmltercluster', 'silhouette_index')
+                    ->first();
+
+                if ($datas1) {
+                    return DataTables::of([$datas1])->make(true);
+                } else {
+                    return DataTables::of([])->make(true); // Mengirimkan array kosong jika tidak ada data
+                }
+            } else {
+                $datas = Clustering::where('tahun', $id)
+                    ->orderBy('silhouette_index', 'desc')
+                    ->orderBy('jmltercluster', 'desc')
+                    ->select('eps', 'minpts', 'jmlcluster', 'jmlnoice', 'jmltercluster', 'silhouette_index')
+                    ->get();
+
+                if ($datas->count() > 0) {
+                    return DataTables::of($datas)->make(true);
+                } else {
+                    return DataTables::of([])->make(true); // Mengirimkan array kosong jika tidak ada data
+                }
+            }
         }
-        return view('pages.hasilklater')->with(compact('idku',));
+
+        return view('pages.hasilklater', compact('idku'));
     }
 
     /**
@@ -178,7 +197,6 @@ class ClusteringController extends Controller
             }
 
             return response()->json(['success' => true]);
-
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }

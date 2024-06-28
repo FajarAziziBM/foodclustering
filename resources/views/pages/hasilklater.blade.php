@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => 'Klastering Data',
-    'elementActive' => 'klasteringdata'
+    'elementActive' => 'klasteringdata',
 ])
 
 @section('content')
@@ -29,7 +29,7 @@
                                         <th> minPts </th>
                                         <th> Jumlah cluster </th>
                                         <th> Jumlah Noise </th>
-                                        <th > Jumlah Tercluster </th>
+                                        <th> Jumlah Tercluster </th>
                                     </tr>
                                 </thead>
                             </table>
@@ -102,65 +102,66 @@
 
         </div>
     </div>
-
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
-            var table = $('#dataTable1').DataTable({
-                processing: true,
-                serverSide: true,
-                paging: true,
-                scrollCollapse: true,
-                ajax: {
-                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
-                    type: 'GET'
-                },
-                columns: [
-                    { data: 'eps', name: 'eps' },
-                    { data: 'minpts', name: 'minpts' },
-                    { data: 'jmlcluster', name: 'jmlcluster' },
-                    { data: 'jmlnoice', name: 'jmlnoice' },
-                    { data: 'jmltercluster', name: 'jmltercluster' }
-                ],
+            var table1 = $('#dataTable1').DataTable({
+            processing: true,
+            serverSide: true,
+            paging: true,
+            scrollCollapse: true,
+            ajax: {
+                url: "{{ route('hasilklaster', ['id' => $idku]) }}",
+                type: 'GET'
+            },
+            columns: [
+                { data: 'eps', name: 'eps' },
+                { data: 'minpts', name: 'minpts' },
+                { data: 'jmlcluster', name: 'jmlcluster' },
+                { data: 'jmlnoice', name: 'jmlnoice' },
+                { data: 'jmltercluster', name: 'jmltercluster' }
+            ],
             });
         });
+
         $(document).ready(function() {
-            var table = $('#dataTable2').DataTable({
-                processing: true,
-                serverSide: true,
-                paging: true,
-                scrollCollapse: true,
-                ajax: {
-                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
-                    type: 'GET'
-                },
-                columns: [
-                    { data: 'eps', name: 'eps' },
-                    { data: 'minpts', name: 'minpts' },
-                    { data: 'silhouette_index', name: 'silhouette_index' }
-                ],
+            var table2 = $('#dataTable2').DataTable({
+            processing: true,
+            serverSide: true,
+            paging: true,
+            scrollCollapse: true,
+            ajax: {
+                url: "{{ route('hasilklaster', ['id' => $idku]) }}",
+                type: 'GET'
+            },
+            columns: [
+                { data: 'eps', name: 'eps' },
+                { data: 'minpts', name: 'minpts' },
+                { data: 'silhouette_index', name: 'silhouette_index' }
+            ],
             });
         });
+
         $(document).ready(function() {
-            var table = $('#dataTable3').DataTable({
-                processing: true,
-                serverSide: true,
-                paging: true,
-                scrollCollapse: true,
-                ajax: {
-                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
-                    type: 'GET'
-                },
-                columns: [
-                    { data: 'eps', name: 'eps' },
-                    { data: 'minpts', name: 'minpts' },
-                    { data: 'jmlcluster', name: 'jmlcluster' },
-                    { data: 'jmlnoice', name: 'jmlnoice' },
-                    { data: 'jmltercluster', name: 'jmltercluster' },
-                    { data: 'silhouette_index', name: 'silhouette_index' }
-                ],
+            var table3 = $('#dataTable3').DataTable({
+            processing: true,
+            serverSide: true,
+            paging: true,
+            scrollCollapse: true,
+            ajax: {
+                url: "{{ route('hasilklaster', ['id' => $idku, 'type' => 'datas1']) }}",
+                type: 'GET'
+            },
+            columns: [
+                { data: 'eps', name: 'eps' },
+                { data: 'minpts', name: 'minpts' },
+                { data: 'jmlcluster', name: 'jmlcluster' },
+                { data: 'jmlnoice', name: 'jmlnoice' },
+                { data: 'jmltercluster', name: 'jmltercluster' },
+                { data: 'silhouette_index', name: 'silhouette_index' }
+            ],
             });
         });
     </script>

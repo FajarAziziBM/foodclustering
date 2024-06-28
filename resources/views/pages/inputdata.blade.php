@@ -36,7 +36,7 @@
                                             <th> Produktivitas(ku/ha)</th>
                                             <th> Produksi(ton)</th>
                                             <th> Tahun  </th>
-                                            <th> Action </th>
+                                            <th class="text-right"> Action </th>
                                         </tr>
                                     </thead>
                                         </tr>
@@ -70,11 +70,10 @@
                 });
             });
 
-
             function deleteData(id) {
             if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
                 $.ajax({
-                    type: "POST", // Menggunakan metode POST
+                    type: "DELETE", // Menggunakan metode POST
                     url: "{{ route('delete.province', ['province' => ':id']) }}".replace(':id', id),
                     data: {
                         "_token": "{{ csrf_token() }}",
