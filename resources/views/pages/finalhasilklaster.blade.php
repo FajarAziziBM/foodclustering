@@ -73,8 +73,8 @@
             <div class="col-md-12">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <h5 class="card-title">Analisis Tahunan</h5>
-                        <p class="card-category">Peningkatan pertahun</p>
+                        <h5 class="card-title">Analisis Klaster</h5>
+                        {{-- <p class="card-category">Peningkatan pertahun</p> --}}
                     </div>
                     <div class="card-body">
                         <canvas id="speedChart" width="400" height="100"></canvas>

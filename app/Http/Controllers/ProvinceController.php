@@ -15,17 +15,18 @@ class ProvinceController extends Controller
      */
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
-            $provinces = Province::all();
-            return DataTables::of($provinces)
-            ->addColumn('action', function ($row) {
-                $editBtn = '<a href="' . route('edit.province', $row->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen-to-square"></i></a>';
-                $deleteBtn = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' . $row->id . ')"><i class="fas fa-trash-can"></i></button>';
-                $btn = '<td class="text-right">' . $editBtn . ' ' . $deleteBtn . '</td>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+            $datas = Province::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
+            return DataTables::of($datas)
+                ->addColumn('action', function ($row) {
+                    $editBtn = '<a href="' . route('edit.province', $row->tahun) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen-to-square"></i></a>';
+                    $deleteBtn = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' . $row->tahun . ')"><i class="fas fa-trash-can"></i></button>';
+                    $btn = '<td class="text-right">' . $editBtn . ' ' . $deleteBtn . '</td>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
         return view('pages.inputdata');
     }
@@ -91,11 +92,27 @@ class ProvinceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, Province $province, $id)
+    public function edit(Request $request, $id)
     {
-        $province = Province::findOrFail($id);
-        return view('pages.editdata', compact('province'));
+        $id1 = $id;
+        if ($request->ajax()) {
+            $datas = Province::all()->where('tahun', $id);
+            return DataTables::of($datas)
+            ->addColumn('action', function ($row) {
+                $editBtn = '<a href="' . route('editdataprovinsi', $row->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen-to-square"></i></a>';
+                $btn = '<td class="text-right">' . $editBtn . '</td>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        }
+        return view('pages.editdata', compact('id1'));
+    }
 
+    public function formedit(Request $request, $id)
+    {
+        $datas = Province::findorfail($id);
+        return view('pages.prov');
     }
 
     /**

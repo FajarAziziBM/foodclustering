@@ -139,8 +139,8 @@
             <div class="col-md-8">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <h5 class="card-title">Analisis Tahunan</h5>
-                        <p class="card-category">Peningkatan pertahun</p>
+                        <h5 class="card-title">Analisis Klaster</h5>
+                        {{-- <p class="card-category">Peningkatan pertahun</p> --}}
                     </div>
                     <div class="card-body">
                         <canvas id="speedChart" width="400" height="100"></canvas>
@@ -157,29 +157,7 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card ">
-                    <div class="card-header ">
-                        <h5 class="card-title">Users Behavior</h5>
-                        <p class="card-category">24 Hours performance</p>
-                    </div>
-                    <div class="card-body ">
-                        <canvas id=chartHours width="400" height="100"></canvas>
-                    </div>
-                    <div class="card-footer ">
-                        <hr>
-                        <div class="stats">
-                            <i class="fa fa-history"></i> Updated 3 minutes ago
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 @endsection
 
