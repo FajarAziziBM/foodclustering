@@ -5,27 +5,49 @@
 
 @section('content')
     <div class="content">
-        <div class="row">
 
-            <div class="col-md-12">
-                <div class="card ">
-                    <div class="card-header ">
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h3 class="mb-0">Upload Data</h3>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <form action="{{ route('importdatas') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                        <input type="file" class="form-control-file" name="file" required>
+                                        <small class="form-text text-muted">file harus ekstensi .csv</small>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
                                 <h3 class="mb-0">Datas</h3>
                             </div>
-                            <div class="col-4 text-right">
-                                <form action="{{ route('importdatas') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <input type="file" name="file" required>
-                                    <button class="btn btn-sm btn-primary">
-                                        Input Data
-                                    </button>
-                                </form>
-                            </div>
-                            <hr>
-                        </div>
 
+
+                        </div>
+                        <hr>
+                    </div>
+
+                    <div class="card-body ">
                         <div class="table-responsive">
                             <table class="table table-striped" style="width:100%" id="datastable">
                                 <thead class="text-primary">
@@ -37,58 +59,95 @@
                                 <tbody></tbody>
                             </table>
                         </div>
+                        <hr>
                     </div>
+
                 </div>
             </div>
-        @endsection
+        </div>
+    </div>
+    </div>
+@endsection
 
-        @push('scripts')
-            <script>
-                $(document).ready(function() {
-                    var table = $('#datastable').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        paging: true,
-                        searching: false,
-                        scrollCollapse: true,
-                        ajax: {
-                            url: "{{ route('inputdata') }}",
-                            type: 'GET'
-                        },
-                        columns: [{
-                                data: 'tahun',
-                                name: 'tahun'
-                            },
-                            {
-                                data: 'action',
-                                name: 'action',
-                                orderable: false,
-                                searchable: false,
-                                className: 'text-right'
-                            }
-                        ],
-                    });
-                });
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var table = $('#datastable').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: true,
+                searching: false,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('inputdata') }}",
+                    type: 'GET'
+                },
+                columns: [{
+                        data: 'tahun',
+                        name: 'tahun'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-right'
+                    }
+                ],
+            });
 
-                function deleteData(id) {
-                    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-                        $.ajax({
-                            type: "DELETE", // Menggunakan metode POST
-                            url: "{{ route('delete.province', ['province' => ':id']) }}".replace(':id', id),
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                                "_method": "DELETE" // Menyertakan _method dengan nilai DELETE
-                            },
-                            success: function(data) {
-                                console.log('Data berhasil dihapus');
-                                // Refresh the DataTable after deleting the row
-                                $('#inputdatas').DataTable().ajax.reload();
-                            },
-                            error: function(data) {
-                                console.error('Gagal menghapus data');
+            // Event delegation untuk menangani klik tombol delete
+            document.getElementById('datastable').addEventListener('click', function(event) {
+                if (event.target && event.target.classList.contains('btn-cluster')) {
+                    event.preventDefault();
+                    var tahun = event.target.closest('tr').querySelector('td:first-child').textContent
+                        .trim();
+
+                    // Konfirmasi pengguna sebelum menghapus
+                    if (confirm('Anda yakin ingin menghapus data untuk tahun ' + tahun + '?')) {
+                        var csrf_token = '{{ csrf_token() }}';
+
+                        // Lakukan AJAX request untuk menghapus data
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', "{{ route('delete.province', ':tahun') }}".replace(':tahun',
+                            tahun), true);
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                        xhr.setRequestHeader('X-CSRF-Token', csrf_token);
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === XMLHttpRequest.DONE) {
+                                if (xhr.status === 200) {
+                                    var response = JSON.parse(xhr.responseText);
+                                    if (response.success) {
+                                        // Refresh DataTable setelah berhasil menghapus
+                                        var dataTable = $('#datastable').DataTable();
+                                        dataTable.ajax.reload();
+
+                                        // Memanggil fungsi showSuccessMessage
+                                        showSuccessMessage('Data berhasil dihapus untuk tahun ' +
+                                            tahun);
+                                    } else {
+                                        alert('Gagal melakukan hapus data untuk tahun ' + tahun + ': ' +
+                                            response.message);
+                                    }
+                                } else {
+                                    console.error('Terjadi kesalahan saat melakukan request:', xhr
+                                        .status);
+                                    alert('Terjadi kesalahan saat melakukan hapus data untuk tahun ' +
+                                        tahun);
+                                }
                             }
-                        });
+                        };
+                        xhr.send(JSON.stringify({
+                            tahun: tahun
+                        }));
                     }
                 }
-            </script>
-        @endpush
+            });
+        });
+
+        // Fungsi untuk menampilkan pesan sukses
+        function showSuccessMessage(message) {
+            alert(message);
+        }
+    </script>
+@endpush

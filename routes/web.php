@@ -27,10 +27,11 @@ Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])-
 
 Route::get('/inputdata', [\App\Http\Controllers\ProvinceController::class, 'index'])->name('inputdata');
 Route::post('/inputdata', [\App\Http\Controllers\ProvinceController::class, 'importdatas'])->name('importdatas');
-Route::delete('/inputdata/{province}', [App\Http\Controllers\ProvinceController::class, 'destroy'])->name('delete.province');
+
 Route::get('/province/{id}/edit', [App\Http\Controllers\ProvinceController::class, 'edit'])->name('edit.province');
 Route::get('/province/{id}/formedit', [App\Http\Controllers\ProvinceController::class, 'formedit'])->name('editdataprovinsi');
 Route::put('/province/{id}/edit', [App\Http\Controllers\ProvinceController::class, 'update'])->name('update.province');
+Route::post('/deleteprov/{tahun}', [\App\Http\Controllers\ProvinceController::class, 'destroy'])->name('delete.province');
 
 Route::get('/klasteringdata', [ClusteringController::class, 'index'])->name('klasteringdata');
 Route::get('/sendDatas', [ProvincesController::class, 'index'])->name('sendDatas');

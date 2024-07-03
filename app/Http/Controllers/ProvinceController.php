@@ -15,13 +15,12 @@ class ProvinceController extends Controller
      */
     public function index(Request $request)
     {
-
         if ($request->ajax()) {
             $datas = Province::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
             return DataTables::of($datas)
                 ->addColumn('action', function ($row) {
                     $editBtn = '<a href="' . route('edit.province', $row->tahun) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen-to-square"></i></a>';
-                    $deleteBtn = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteData(' . $row->tahun . ')"><i class="fas fa-trash-can"></i></button>';
+                    $deleteBtn = '<button type="button" class="btn btn-danger btn-sm btn-cluster"><i class="fas fa-trash-can"></i></button>';
                     $btn = '<td class="text-right">' . $editBtn . ' ' . $deleteBtn . '</td>';
                     return $btn;
                 })
@@ -92,28 +91,28 @@ class ProvinceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, $id)
-    {
-        $id1 = $id;
-        if ($request->ajax()) {
-            $datas = Province::all()->where('tahun', $id);
-            return DataTables::of($datas)
-            ->addColumn('action', function ($row) {
-                $editBtn = '<a href="' . route('editdataprovinsi', $row->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen-to-square"></i></a>';
-                $btn = '<td class="text-right">' . $editBtn . '</td>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+        public function edit(Request $request, $id)
+        {
+            if ($request->ajax()) {
+                $datas = Province::where('tahun', $id)->get();
+                return DataTables::of($datas)
+                    ->addColumn('action', function ($row) {
+                        $editBtn = '<a href="' . route('editdataprovinsi', $row->id) . '" class="btn btn-warning btn-sm"><i class="fas fa-pen-to-square"></i></a>';
+                        $btn = '<td class="text-right">' . $editBtn . '</td>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            $province = Province::find($id);
+            return view('pages.editdata', compact('province', 'id'));
         }
-        return view('pages.editdata', compact('id1'));
-    }
 
-    public function formedit(Request $request, $id)
-    {
-        $datas = Province::findorfail($id);
-        return view('pages.prov');
-    }
+        public function formedit(Request $request, $id)
+        {
+            $province = Province::findorfail($id);
+            return view('pages.proveditdata', compact('province', 'id'));
+        }
 
     /**
      * Update the specified resource in storage.
@@ -129,29 +128,29 @@ class ProvinceController extends Controller
             'tahun' => 'required|integer',
         ]);
 
-        // Ambil data berdasarkan ID dari request
         $province = Province::findOrFail($id);
 
-        // Perbarui data dengan nilai baru dari request
         $province->namaprovinsi = $validatedData['namaprovinsi'];
         $province->luaspanen = $validatedData['luaspanen'];
         $province->produktivitas = $validatedData['produktivitas'];
         $province->produksi = $validatedData['produksi'];
         $province->tahun = $validatedData['tahun'];
 
-        // Simpan perubahan ke database
         $province->save();
 
-        return redirect()->route('klasteringdata')->response()->json(['success' => 'Data updated successfully']);
+        return redirect()->route('update.province', ['id' => $province->tahun])->with('success', 'Data Berhasil Diedit');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id, Province $province)
+    public function destroy($tahun, Province $province)
     {
-        $province = Province::findOrFail($id);
-        $province->delete();
-        return redirect()->route('inputdata')->with('success', 'Data deleted successfully');
+        try {
+            Province::where('tahun', $tahun)->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 }
