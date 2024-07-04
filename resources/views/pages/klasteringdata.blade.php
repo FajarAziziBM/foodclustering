@@ -1,13 +1,13 @@
 @extends('layouts.app', [
     'class' => 'Klastering Data',
-    'elementActive' => 'klasteringdata'
+    'elementActive' => 'klasteringdata',
 ])
 
 @section('content')
     <div class="content">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
@@ -43,7 +43,8 @@
     </div>
 
     <!-- Modal Konfirmasi Hapus -->
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog"
+        aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -77,9 +78,17 @@
                     url: "{{ route('klasteringdata') }}",
                     type: 'GET'
                 },
-                columns: [
-                    { data: 'tahun', name: 'tahun' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-right' }
+                columns: [{
+                        data: 'tahun',
+                        name: 'tahun'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-right'
+                    }
                 ],
             });
 
@@ -96,14 +105,17 @@
                         if (response.success) {
                             alert('Data berhasil diklastering untuk tahun ' + tahun);
                             table.ajax.reload(); // Reload data table
-                            showSuccessMessage('Data berhasil diklastering untuk tahun ' + tahun);
+                            showSuccessMessage('Data berhasil diklastering untuk tahun ' +
+                                tahun);
                         } else {
-                            alert('Gagal melakukan klastering untuk tahun ' + tahun + ': ' + response.message);
+                            alert('Gagal melakukan klastering untuk tahun ' + tahun + ': ' +
+                                response.message);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
-                        alert('Terjadi kesalahan saat melakukan klastering untuk tahun ' + tahun);
+                        alert('Terjadi kesalahan saat melakukan klastering untuk tahun ' +
+                            tahun);
                     }
                 });
             });
@@ -126,16 +138,19 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            alert('Data klaster berhasil dihapus untuk tahun ' + $('#deleteYear').text());
+                            alert('Data klaster berhasil dihapus untuk tahun ' + $(
+                                '#deleteYear').text());
                             $('#deleteConfirmationModal').modal('hide');
                             table.ajax.reload(); // Reload data table
                         } else {
-                            alert('Gagal menghapus data klaster untuk tahun ' + $('#deleteYear').text() + ': ' + response.message);
+                            alert('Gagal menghapus data klaster untuk tahun ' + $('#deleteYear')
+                                .text() + ': ' + response.message);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
-                        alert('Terjadi kesalahan saat menghapus data klaster untuk tahun ' + $('#deleteYear').text());
+                        alert('Terjadi kesalahan saat menghapus data klaster untuk tahun ' + $(
+                            '#deleteYear').text());
                     }
                 });
             });

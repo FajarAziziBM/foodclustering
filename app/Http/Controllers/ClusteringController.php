@@ -147,15 +147,35 @@ class ClusteringController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show1(Request $request)
     {
-        if ($request->ajax()) {
-            $data = HasilCluster::select('cluster', 'anggota_cluster')->get();
-            return DataTables::of($data)->make(true);
-        }
+        $latestYear = HasilCluster::max('tahun'); // Ambil tahun terakhir dari tabel hasil_clusters
+        $selectedYear = $latestYear ?? date('Y'); // Jika tidak ada data, default ke tahun saat ini
+        $availableYears = HasilCluster::distinct()->pluck('tahun')->toArray(); // Ambil tahun-tahun yang tersedia dari database
 
-        return view('pages.finalhasilklaster');
+        $clusterData = HasilCluster::where('tahun', $selectedYear)->get(); // Ambil data klaster untuk tahun yang dipilih
+
+        return view('pages.finalhasilklaster', [
+            'selectedYear' => $selectedYear,
+            'availableYears' => $availableYears,
+            'clusterData' => $clusterData,
+        ]);
     }
+    public function show2(Request $request)
+    {
+        $latestYear = HasilCluster::max('tahun'); // Ambil tahun terakhir dari tabel hasil_clusters
+        $selectedYear = $request->input('tahun', $latestYear ?? date('Y')); // Ambil tahun yang dipilih dari request, default ke tahun terakhir atau tahun saat ini jika tidak ada data
+        $availableYears = HasilCluster::distinct()->pluck('tahun')->toArray(); // Ambil tahun-tahun yang tersedia dari database
+
+        $clusterData = HasilCluster::where('tahun', $selectedYear)->get(); // Ambil data klaster untuk tahun yang dipilih
+
+        return view('pages.finalhasilklaster', [
+            'selectedYear' => $selectedYear,
+            'availableYears' => $availableYears,
+            'clusterData' => $clusterData,
+        ]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.

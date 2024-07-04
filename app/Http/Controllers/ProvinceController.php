@@ -63,7 +63,7 @@ class ProvinceController extends Controller
             if ($fileExtension === 'csv') {
                 // Melakukan import dengan file yang diupload
                 Excel::import(new UsersImport($year), $file->getPathName(), null, \Maatwebsite\Excel\Excel::CSV);
-                return redirect('/inputdata')->with('success', 'All good!');
+                return redirect('/inputdata')->with('success', 'Data Berhasil Diupload!');
             } else {
                 return redirect('/inputdata')->with('error', 'Please upload a .csv file.');
             }

@@ -5,8 +5,6 @@
 
 @section('content')
     <div class="content">
-
-
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
@@ -21,17 +19,32 @@
                             <div class="col-8">
                                 <form action="{{ route('importdatas') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                                        <input type="file" class="form-control-file" name="file" required>
-                                        <small class="form-text text-muted">file harus ekstensi .csv</small>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    <input type="file" class="form-control-file" name="file" required>
+                                    <small class="form-text text-muted">file harus ekstensi .csv</small>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
+        <!-- Success/Error Messages -->
+        @if (session('success'))
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
 
         <div class="col-md-12">
             <div class="card">
@@ -41,8 +54,6 @@
                             <div class="col-8">
                                 <h3 class="mb-0">Datas</h3>
                             </div>
-
-
                         </div>
                         <hr>
                     </div>
@@ -66,7 +77,7 @@
             </div>
         </div>
     </div>
-    </div>
+
 @endsection
 
 @push('scripts')

@@ -37,7 +37,8 @@ Route::get('/klasteringdata', [ClusteringController::class, 'index'])->name('kla
 Route::get('/sendDatas', [ProvincesController::class, 'index'])->name('sendDatas');
 Route::get('/klasteringdata/{id}/dbscan', [\App\Http\Controllers\ClusteringController::class, 'hasilcluster'])->name('hasilklaster');
 Route::delete('/klasteringdata/{id}', [App\Http\Controllers\ClusteringController::class, 'destroy'])->name('delete.cluster');
-Route::get('/hasilklasterdbscan', [\App\Http\Controllers\ClusteringController::class, 'show'])->name('hasilklasterdbscan');
+Route::get('/hasilklasterdbscan', [\App\Http\Controllers\ClusteringController::class, 'show1'])->name('hasilklasterdbscan');
+Route::get('/hasilklasterdbscan', [\App\Http\Controllers\ClusteringController::class, 'show2'])->name('hasilklasterdbscan.show');
 
 Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 
