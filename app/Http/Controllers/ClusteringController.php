@@ -147,21 +147,7 @@ class ClusteringController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show1(Request $request)
-    {
-        $latestYear = HasilCluster::max('tahun'); // Ambil tahun terakhir dari tabel hasil_clusters
-        $selectedYear = $latestYear ?? date('Y'); // Jika tidak ada data, default ke tahun saat ini
-        $availableYears = HasilCluster::distinct()->pluck('tahun')->toArray(); // Ambil tahun-tahun yang tersedia dari database
-
-        $clusterData = HasilCluster::where('tahun', $selectedYear)->get(); // Ambil data klaster untuk tahun yang dipilih
-
-        return view('pages.finalhasilklaster', [
-            'selectedYear' => $selectedYear,
-            'availableYears' => $availableYears,
-            'clusterData' => $clusterData,
-        ]);
-    }
-    public function show2(Request $request)
+    public function show(Request $request)
     {
         $latestYear = HasilCluster::max('tahun'); // Ambil tahun terakhir dari tabel hasil_clusters
         $selectedYear = $request->input('tahun', $latestYear ?? date('Y')); // Ambil tahun yang dipilih dari request, default ke tahun terakhir atau tahun saat ini jika tidak ada data
@@ -173,6 +159,23 @@ class ClusteringController extends Controller
             'selectedYear' => $selectedYear,
             'availableYears' => $availableYears,
             'clusterData' => $clusterData,
+        ]);
+    }
+
+    public function getGrafikClusteringData()
+    {
+        $latestYear = HasilCluster::max('tahun');
+        $selectedYear = request()->input('tahun', $latestYear ?? date('Y'));
+
+        $clusterData = Clustering::where('tahun', $selectedYear)
+            ->get(['eps', 'minpts', 'silhouette_index']);
+
+        $anggota = HasilCluster::where('tahun', $selectedYear)
+            ->get(['cluster', 'anggota_cluster']);
+
+        return response()->json([
+            'clusterData' => $clusterData,
+            'anggota' => $anggota,
         ]);
     }
 
