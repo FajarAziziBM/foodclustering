@@ -170,12 +170,32 @@ class ClusteringController extends Controller
         $clusterData = Clustering::where('tahun', $selectedYear)
             ->get(['eps', 'minpts', 'silhouette_index']);
 
-        $anggota = HasilCluster::where('tahun', $selectedYear)
-            ->get(['cluster', 'anggota_cluster']);
+        $anggota_cluster = HasilCluster::where('tahun', $selectedYear)
+            ->where('cluster', 'cluster_1')
+            ->pluck('anggota_cluster')
+            ->first();
+
+        $anggota_array = explode(', ', $anggota_cluster);
+        $jumlah_anggota = count($anggota_array);
+
+
+        $anggota_cluster2 = HasilCluster::where('tahun', $selectedYear)
+        ->where('cluster', 'cluster_0')
+        ->pluck('anggota_cluster')
+        ->first();
+
+        $anggota_array2 = explode(', ', $anggota_cluster2);
+        $jumlah_anggota2 = count($anggota_array2);
+
+        $jumlah_anggota_total = [
+            'anggota' => $jumlah_anggota,
+            'anggota2' => $jumlah_anggota2
+        ];
+
 
         return response()->json([
             'clusterData' => $clusterData,
-            'anggota' => $anggota,
+            'anggota' => $jumlah_anggota_total,
         ]);
     }
 

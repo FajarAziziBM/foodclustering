@@ -108,35 +108,23 @@
             fetch('{{ route('data.grafik') }}')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.clusterData && data.clusterData.length > 0) {
-                        renderBarChart(data.anggota); // Panggil fungsi renderBarChart dengan data anggota
-                        renderLineChart(data.clusterData);
-                    } else {
-                        console.error('No data available or data format is incorrect');
-                    }
+                    console.log(data.clusterData)
+                    renderBarChart(data.anggota);
+                    renderLineChart(data.clusterData);
                 })
                 .catch(error => {
                     console.error('Error fetching the clustering data:', error);
                 });
         });
 
-        function renderBarChart(anggotaData) {
+        function renderBarChart(anggota) {
             const ctx = document.getElementById('clusterChart').getContext('2d');
 
-            // Filter data untuk cluster_0 dan cluster_1
-            const cluster_0 = anggotaData.find(item => item.cluster === 'cluster_0');
-            const cluster_1 = anggotaData.find(item => item.cluster === 'cluster_1');
-
-            if (!cluster_0 || !cluster_1) {
-                console.error('Data for cluster_0 or cluster_1 not found');
-                return;
-            }
-
             const labels = ['cluster_0', 'cluster_1'];
-            const data = [cluster_0.anggota_cluster, cluster_1.anggota_cluster];
+            const data = [anggota.anggota, anggota.anggota2];
 
             new Chart(ctx, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
                     labels: labels,
                     datasets: [{
@@ -150,16 +138,10 @@
                             'rgba(255, 99, 132, 1)',
                             'rgba(54, 162, 235, 1)',
                         ],
-                        borderWidth: 1
+                        hoverOffset: 4
                     }]
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
+
             });
         }
 
