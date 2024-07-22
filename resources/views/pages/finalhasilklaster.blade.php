@@ -28,7 +28,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-header">
-                        <h3 class="card-title" id="clusterTitle">Cluster {{ $selectedYear }}</h3>
+                        <h3 class="card-title" id="clusterTitle">Klaster {{ $selectedYear }}</h3>
                         <hr>
                     </div>
                     <div class="card-body">
@@ -36,8 +36,8 @@
                             <table class="table table-striped" style="width:100%" id="dataTable">
                                 <thead class="text-primary">
                                     <tr>
-                                        <th>Cluster</th>
-                                        <th class="text-right">Anggota Cluster</th>
+                                        <th>Klaster</th>
+                                        <th class="text-right">Anggota Klaster</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,7 +61,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title">Statistik Klaster</h5>
+                            <h5 class="card-title">Grafik Klaster</h5>
                             <hr>
                             <p class="card-category">Hasil Terbaik</p>
 
@@ -70,9 +70,7 @@
                             <canvas id="clusterChart"></canvas>
                         </div>
                         <div class="card-footer">
-                            <div class="legend">
-                                <i class="fa fa-bar text-primary"></i> Jumlah Anggota Klaster
-                            </div>
+
                             <hr>
                         </div>
                     </div>
@@ -81,7 +79,7 @@
                 <div class="col-md-8">
                     <div class="card card-chart">
                         <div class="card-header">
-                            <h5 class="card-title">Silhouette Score Analysis</h5>
+                            <h5 class="card-title">Analisis Nilai Silhouette</h5>
                             <hr>
                         </div>
                         <div class="card-body">
@@ -108,7 +106,7 @@
             fetch('{{ route('data.grafik') }}')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.clusterData)
+                    // console.log(data.clusterData)
                     renderBarChart(data.anggota);
                     renderLineChart(data.clusterData);
                 })
@@ -120,7 +118,7 @@
         function renderBarChart(anggota) {
             const ctx = document.getElementById('clusterChart').getContext('2d');
 
-            const labels = ['cluster_0', 'cluster_1'];
+            const labels = ['rentan', 'tahan'];
             const data = [anggota.anggota, anggota.anggota2];
 
             new Chart(ctx, {

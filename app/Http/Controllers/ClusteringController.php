@@ -171,7 +171,7 @@ class ClusteringController extends Controller
             ->get(['eps', 'minpts', 'silhouette_index']);
 
         $anggota_cluster = HasilCluster::where('tahun', $selectedYear)
-            ->where('cluster', 'cluster_1')
+            ->where('cluster', 'tahan')
             ->pluck('anggota_cluster')
             ->first();
 
@@ -180,7 +180,7 @@ class ClusteringController extends Controller
 
 
         $anggota_cluster2 = HasilCluster::where('tahun', $selectedYear)
-        ->where('cluster', 'cluster_0')
+        ->where('cluster', 'rentan')
         ->pluck('anggota_cluster')
         ->first();
 

@@ -27,9 +27,9 @@ class UsersImport implements ToModel, WithHeadingRow{
     {
         $rows = [
             'namaprovinsi' => $row['provinsi'],
-            'luaspanen' => $row['luas_panen_tanaman_padi_ha_ha'],
-            'produktivitas' => $row['produktivitas_tanaman_padi_kuha_kuha'],
-            'produksi' => $row['rekap_produksi_padi_ton_ton'],
+            'luaspanen' => $row['luas_panen_tanaman_padi_ha'] ?? 0,
+            'produktivitas' => $row['produktivitas_tanaman_padi_kuha'] ?? 0,
+            'produksi' => $row['rekap_produksi_padi_ton'] ?? 0,
             'tahun' => $this->year,
         ];
 

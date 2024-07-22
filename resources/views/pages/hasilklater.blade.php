@@ -14,7 +14,7 @@
                         <div class="row align-items-center">
                             <div class="col-8">
                                 <br>
-                                <h3 class="mb-0">Analisis kNNdist</h3>
+                                <h3 class="mb-0">Analisis Percobaan EPS dan MINPTS Yang Bervariasi</h3>
                             </div>
                         </div>
                         <hr>
@@ -29,7 +29,7 @@
                                         <th> minPts </th>
                                         <th> Jumlah cluster </th>
                                         <th> Jumlah Noise </th>
-                                        <th> Jumlah Tercluster </th>
+                                        <th> Jumlah Terkluster </th>
                                     </tr>
                                 </thead>
                             </table>
@@ -45,7 +45,7 @@
                         <div class="row align-items-center">
                             <div class="col-8">
                                 <br>
-                                <h3 class="mb-0">Analisis Silhouette Indek</h3>
+                                <h3 class="mb-0">Analisis Nilai Silhouette</h3>
                             </div>
                         </div>
                         <hr>
@@ -89,7 +89,7 @@
                                         <th> minPts </th>
                                         <th> Jumlah cluster </th>
                                         <th> Jumlah Noise </th>
-                                        <th> Jumlah Tercluster </th>
+                                        <th> Jumlah Terkluster </th>
                                         <th> Silhouette Indek </th>
                                     </tr>
                                 </thead>
@@ -100,7 +100,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -109,60 +108,99 @@
     <script>
         $(document).ready(function() {
             var table1 = $('#dataTable1').DataTable({
-            processing: true,
-            serverSide: true,
-            paging: true,
-            scrollCollapse: true,
-            ajax: {
-                url: "{{ route('hasilklaster', ['id' => $idku]) }}",
-                type: 'GET'
-            },
-            columns: [
-                { data: 'eps', name: 'eps' },
-                { data: 'minpts', name: 'minpts' },
-                { data: 'jmlcluster', name: 'jmlcluster' },
-                { data: 'jmlnoice', name: 'jmlnoice' },
-                { data: 'jmltercluster', name: 'jmltercluster' }
-            ],
+                processing: true,
+                serverSide: true,
+                paging: true,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
+                    type: 'GET'
+                },
+                columns: [{
+                        data: 'eps',
+                        name: 'eps'
+                    },
+                    {
+                        data: 'minpts',
+                        name: 'minpts'
+                    },
+                    {
+                        data: 'jmlcluster',
+                        name: 'jmlcluster'
+                    },
+                    {
+                        data: 'jmlnoice',
+                        name: 'jmlnoice'
+                    },
+                    {
+                        data: 'jmltercluster',
+                        name: 'jmltercluster'
+                    }
+                ],
             });
         });
 
         $(document).ready(function() {
             var table2 = $('#dataTable2').DataTable({
-            processing: true,
-            serverSide: true,
-            paging: true,
-            scrollCollapse: true,
-            ajax: {
-                url: "{{ route('hasilklaster', ['id' => $idku]) }}",
-                type: 'GET'
-            },
-            columns: [
-                { data: 'eps', name: 'eps' },
-                { data: 'minpts', name: 'minpts' },
-                { data: 'silhouette_index', name: 'silhouette_index' }
-            ],
+                processing: true,
+                serverSide: true,
+                paging: true,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('hasilklaster', ['id' => $idku]) }}",
+                    type: 'GET'
+                },
+                columns: [{
+                        data: 'eps',
+                        name: 'eps'
+                    },
+                    {
+                        data: 'minpts',
+                        name: 'minpts'
+                    },
+                    {
+                        data: 'silhouette_index',
+                        name: 'silhouette_index'
+                    }
+                ],
             });
         });
 
         $(document).ready(function() {
             var table3 = $('#dataTable3').DataTable({
-            processing: true,
-            serverSide: true,
-            paging: true,
-            scrollCollapse: true,
-            ajax: {
-                url: "{{ route('hasilklaster', ['id' => $idku, 'type' => 'datas1']) }}",
-                type: 'GET'
-            },
-            columns: [
-                { data: 'eps', name: 'eps' },
-                { data: 'minpts', name: 'minpts' },
-                { data: 'jmlcluster', name: 'jmlcluster' },
-                { data: 'jmlnoice', name: 'jmlnoice' },
-                { data: 'jmltercluster', name: 'jmltercluster' },
-                { data: 'silhouette_index', name: 'silhouette_index' }
-            ],
+                processing: true,
+                serverSide: true,
+                paging: true,
+                scrollCollapse: true,
+                ajax: {
+                    url: "{{ route('hasilklaster', ['id' => $idku, 'type' => 'datas1']) }}",
+                    type: 'GET'
+                },
+                columns: [{
+                        data: 'eps',
+                        name: 'eps'
+                    },
+                    {
+                        data: 'minpts',
+                        name: 'minpts'
+                    },
+                    {
+                        data: 'jmlcluster',
+                        name: 'jmlcluster'
+                    },
+                    {
+                        data: 'jmlnoice',
+                        name: 'jmlnoice'
+                    },
+                    {
+                        data: 'jmltercluster',
+                        name: 'jmltercluster'
+                    },
+                    {
+                        data: 'silhouette_index',
+                        name: 'silhouette_index'
+                    }
+                ],
             });
         });
     </script>

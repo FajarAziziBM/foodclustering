@@ -10,7 +10,11 @@
                 <div class="header-body text-center mb-7">
                     <div class="row justify-content-center">
                         <div class="col-lg-6 col-md-8 pt-5">
-                            <h1 >{{ __('Welcome to Food Clustering with DBSCAN Method.') }}</h1>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <h1 >{{ __('Welcome to Food Clustering with DBSCAN Method') }}</h1>
                         </div>
                     </div>
                 </div>

@@ -100,5 +100,4 @@ class ProvincesController extends Controller
             ], 500); // Kode status 500 untuk kesalahan server
         }
     }
-
 }
