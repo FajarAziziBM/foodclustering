@@ -75,7 +75,7 @@ class DBSCANClusterer:
 
                         results.append(result)
 
-                        if silhouette_avg > best_score and num_clusters == 2:  # Ensure we have exactly 2 clusters
+                        if silhouette_avg > best_score and num_clusters == 2:
                             best_score = silhouette_avg
                             best_config = result
                             best_labels = labels
